@@ -1,10 +1,11 @@
 # solr-upgrade-tests
 Running
 -------
-Try the following to run the project:
+
+First, run a Zookeeper instance at 2181 port. Then run the following:
 
     mvn clean compile assembly:single
 
-    java -cp target/solr-upgrade-tests-1.0-SNAPSHOT-jar-with-dependencies.jar SOLRUpgradeTests -v1 5.3.0 -v2 5.4.1
+    java -cp target/solr-upgrade-tests-1.0-SNAPSHOT-jar-with-dependencies.jar org.apache.solr.tests.solrupdatetests.SolrUpdateTests -v1 5.2.0 -v2 5.3.1
 
 

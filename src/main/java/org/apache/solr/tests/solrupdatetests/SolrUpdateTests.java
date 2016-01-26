@@ -199,6 +199,12 @@ public class SolrUpdateTests {
 	public String portTwo = "1235";
 	
 	public String portThree = "1236";
+	
+	public static String solrCommand;
+	
+	static {
+	  solrCommand = System.getProperty("os.name")!=null && System.getProperty("os.name").startsWith("Windows")? "bin/solr.cmd": "bin/solr";
+	}
 
 	public void postMessage(String message) {
 			System.out.println(message);
@@ -343,12 +349,12 @@ public class SolrUpdateTests {
         }        
         
         if ("N1".equals(node)) {
-        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/bin/solr.cmd " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
         } else if ("N2".equals(node)) {
-        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/bin/solr.cmd " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
 
         } else if ("N3".equals(node)) {
-        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/bin/solr.cmd " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
         }
         
         StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
@@ -368,28 +374,15 @@ public class SolrUpdateTests {
         Process proc = null;
      
         
-        if (this.getOperatingSystemType().equals(OSType.Windows)) {
-		
-        		if ("N1".equals(node)) {
-		        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/bin/solr.cmd create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-		        } else if ("N2".equals(node)) {
-		        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/bin/solr.cmd create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-		        } else if ("N3".equals(node)) {
-		        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/bin/solr.cmd create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-		        }
-        
-        } else if (this.getOperatingSystemType().equals(OSType.Linux)) {
-        	
-    		if ("N1".equals(node)) {
-	        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/bin/solr create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-	        } else if ("N2".equals(node)) {
-	        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/bin/solr create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-	        } else if ("N3".equals(node)) {
-	        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/bin/solr create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
-	        }
-        	
+        if ("N1".equals(node)) {
+          proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
+        } else if ("N2".equals(node)) {
+          proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
+        } else if ("N3".equals(node)) {
+          proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         }
-        StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
+
+    		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
         StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
             
         errorGobbler.start();

@@ -210,9 +210,10 @@ public class SolrUpdateTests {
 		 URL link = null;
 		
 		 if (what.equals(ReleaseType.SOLR)) {
-			 this.postMessage(DOWNLOADING_RELEASE + " : " + version);
-			 fileName = "solr-" + version + ".zip"; 
-			 link = new URL(URL_BASE + "/" + version + "/" + fileName); 
+       fileName = "solr-" + version + ".zip"; 
+			 String url = URL_BASE + "/" + version + "/" + fileName;
+		   this.postMessage(DOWNLOADING_RELEASE + " " + version + " from "+url);
+			 link = new URL(url); 
 		 } else if (what.equals(ReleaseType.ZOOKEEPER)) {
 			 this.postMessage(DOWNLOADING_ZOO_RELEASE + " : " + version);
 			 fileName = "zookeeper-" + version + ".tar.gz"; 
@@ -220,20 +221,18 @@ public class SolrUpdateTests {
 		 }
 		
 		 InputStream in = new BufferedInputStream(link.openStream());
-		 ByteArrayOutputStream out = new ByteArrayOutputStream();
-		 byte[] buf = new byte[1024];
+     FileOutputStream fos = new FileOutputStream(TEMP_DIR + fileName);
+		 byte[] buf = new byte[1024*1024]; // 1mb blocks
 		 int n = 0;
+		 long size = 0;
 		 while (-1!=(n=in.read(buf)))
 		 {
-			this.postMessage("" + out.size()); 
-		    out.write(buf, 0, n);
+		   size+=n;
+		   this.postMessage("" + size); 
+		   fos.write(buf, 0, n);
 		 }
-		 out.close();
+		 fos.close();
 		 in.close();
-		 byte[] response = out.toByteArray();
- 
-		 FileOutputStream fos = new FileOutputStream(TEMP_DIR + fileName);
-		 fos.write(response);
 		 fos.close();
 		 
 		return false;

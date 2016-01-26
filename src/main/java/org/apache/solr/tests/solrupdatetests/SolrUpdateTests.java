@@ -62,7 +62,7 @@ public class SolrUpdateTests {
 	
 	public final String ZOO_URL_BASE = "http://www.us.apache.org/dist/zookeeper/";
 	
-	public String WORK_DIRECTORY = "C:";
+	public String WORK_DIRECTORY = System.getProperty("user.dir");
 	
 	public final String DNAME = "SOLRUpdateTests";
 	

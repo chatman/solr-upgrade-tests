@@ -349,11 +349,14 @@ public class SolrUpdateTests {
         }        
         
         if ("N1".equals(node)) {
+          new File(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
         	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
         } else if ("N2".equals(node)) {
+          new File(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
         	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
 
         } else if ("N3".equals(node)) {
+          new File(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
         	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
         }
         
@@ -375,10 +378,13 @@ public class SolrUpdateTests {
      
         
         if ("N1".equals(node)) {
+          new File(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         } else if ("N2".equals(node)) {
+          new File(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         } else if ("N3".equals(node)) {
+          new File(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         }
 

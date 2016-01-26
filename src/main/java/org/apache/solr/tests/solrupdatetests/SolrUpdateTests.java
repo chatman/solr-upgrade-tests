@@ -378,13 +378,10 @@ public class SolrUpdateTests {
      
         
         if ("N1".equals(node)) {
-          new File(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         } else if ("N2".equals(node)) {
-          new File(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         } else if ("N3".equals(node)) {
-          new File(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
           proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" create_collection -c " +collectionName+ " -shards " +shards+ " -replicationFactor " +replicationFactor);
         }
 
@@ -487,45 +484,9 @@ public class SolrUpdateTests {
 			}	
 
 			FileUtils.cleanDirectory(dest);
-			copyFolder(src, dest);			
+      FileUtils.copyDirectory(src, dest);
 			
 		}
-		
-		
-		public void copyFolder(File src, File dest)
-		    	throws IOException{
-			
-		    	
-		    	if(src.isDirectory()){
-		    		
-						    		if(!dest.exists()){
-						    		   dest.mkdir();
-						    		   this.postMessage("Directory copied from " + src + "  to " + dest);
-						    		}
-		    		
-						    		String files[] = src.list();
-		    		
-						    		for (String file : files) {
-						    		   File srcFile = new File(src, file);
-						    		   File destFile = new File(dest, file);
-						    		   copyFolder(srcFile,destFile);
-						    		}
-		    	   
-							    	}else{
-							    			InputStream in = new FileInputStream(src);
-							    	        OutputStream out = new FileOutputStream(dest); 
-							    	                     
-							    	        byte[] buffer = new byte[1024];
-							    	        int length;
-							    	        while ((length = in.read(buffer)) > 0){
-							    	    	   out.write(buffer, 0, length);
-							    	        }
-							 
-							    	        in.close();
-							    	        out.close();
-							    	        this.postMessage("File copied from " + src + " to " + dest);
-							    	}
-		    }
 
 		public boolean checkForRelease(String version, ReleaseType name, Location location, Type type) {
 		
@@ -695,17 +656,17 @@ public class SolrUpdateTests {
 			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODE_ONE, Type.EXTRACTED)) {
 				File node = new File(NODE_ONE_DIR + "solr-" + versionOne);
 				node.mkdir();
-				this.copyFolder(new File(TEMP_DIR + "solr-" + versionOne), node);
+	      FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
 			}
 			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODE_TWO, Type.EXTRACTED)) {
 				File node = new File(NODE_TWO_DIR + "solr-" + versionOne);
 				node.mkdir();
-				this.copyFolder(new File(TEMP_DIR + "solr-" + versionOne), node);
+				FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
 			}
 			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODE_THREE, Type.EXTRACTED)) {
 				File node = new File(NODE_THREE_DIR + "solr-" + versionOne);
 				node.mkdir();
-				this.copyFolder(new File(TEMP_DIR + "solr-" + versionOne), node);
+				FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
 			}
 			
 			

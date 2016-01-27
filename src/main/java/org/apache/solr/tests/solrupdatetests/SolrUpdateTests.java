@@ -350,14 +350,14 @@ public class SolrUpdateTests {
         
         if ("N1".equals(node)) {
           new File(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
         } else if ("N2".equals(node)) {
           new File(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
 
         } else if ("N3".equals(node)) {
           new File(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z localhost:2181");
+        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
         }
         
         StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
@@ -399,7 +399,7 @@ public class SolrUpdateTests {
 			
 			this.postMessage(POSTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("Localhost:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
 	        solr.connect();
 	        
 	        solr.setDefaultCollection(collectionName);
@@ -423,7 +423,7 @@ public class SolrUpdateTests {
 			
 			this.postMessage(GETTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("Localhost:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
 	        solr.connect();	        
 	        solr.setDefaultCollection(collectionName);
 	        
@@ -452,7 +452,7 @@ public class SolrUpdateTests {
 			
 			this.postMessage(GETTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("Localhost:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
 	        solr.connect();	        
 	        solr.setDefaultCollection(collectionName);	
 	        

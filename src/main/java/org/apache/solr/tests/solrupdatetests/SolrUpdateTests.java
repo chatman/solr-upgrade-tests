@@ -227,7 +227,7 @@ public class SolrUpdateTests {
 		 }
 		
 		 InputStream in = new BufferedInputStream(link.openStream());
-     FileOutputStream fos = new FileOutputStream(TEMP_DIR + fileName);
+		 FileOutputStream fos = new FileOutputStream(TEMP_DIR + fileName);
 		 byte[] buf = new byte[1024*1024]; // 1mb blocks
 		 int n = 0;
 		 long size = 0;
@@ -490,7 +490,7 @@ public class SolrUpdateTests {
 
 		public boolean checkForRelease(String version, ReleaseType name, Location location, Type type) {
 		
-		this.postMessage(CHECK_RELEASE_DOWNLOADED + " >> " + TEMP_DIR + "solr-" + version + ".zip");
+		this.postMessage(CHECK_RELEASE_DOWNLOADED + " >> " + TEMP_DIR + "solr-" + version + ".zip" + " Type: " + type + " Location:" + location);
 		File release = null;
 		if(name.equals(ReleaseType.SOLR)) {
 			if (location.equals(Location.NODE_ONE)) {
@@ -656,7 +656,7 @@ public class SolrUpdateTests {
 			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODE_ONE, Type.EXTRACTED)) {
 				File node = new File(NODE_ONE_DIR + "solr-" + versionOne);
 				node.mkdir();
-	      FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
+				FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
 			}
 			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODE_TWO, Type.EXTRACTED)) {
 				File node = new File(NODE_TWO_DIR + "solr-" + versionOne);

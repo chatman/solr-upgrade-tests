@@ -709,28 +709,28 @@ public class SolrUpdateTests {
 			
 			this.postData(COLLECTION_NAME, this.zkPort);
 			
-			this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP);
+			this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP, this.zkPor);
 			Thread.sleep(10000);
 			this.upgradeSolr(versionOne, versionTwo, "N1");
-			this.doActionOnSolrNode("N1", versionOne, portOne, Action.START);
+			this.doActionOnSolrNode("N1", versionOne, portOne, Action.START, this.zkPor);
 			
 			Thread.sleep(10000);
 
 			boolean test1 = this.verifyData(COLLECTION_NAME, this.zkPort);
 			
-			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.STOP);
+			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.STOP, this.zkPor);
 			Thread.sleep(10000);
 			this.upgradeSolr(versionOne, versionTwo, "N2");
-			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.START);
+			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.START, this.zkPor);
 			
 			Thread.sleep(10000);
 
 			boolean test2 = this.verifyData(COLLECTION_NAME, this.zkPort);
 
-			this.doActionOnSolrNode("N3", versionOne, portThree, Action.STOP);
+			this.doActionOnSolrNode("N3", versionOne, portThree, Action.STOP, this.zkPor);
 			Thread.sleep(10000);
 			this.upgradeSolr(versionOne, versionTwo, "N3");
-			this.doActionOnSolrNode("N3", versionOne, portThree, Action.START);
+			this.doActionOnSolrNode("N3", versionOne, portThree, Action.START, this.zkPor);
 			
 			Thread.sleep(10000);
 
@@ -745,15 +745,15 @@ public class SolrUpdateTests {
 			
 			Thread.sleep(10000);
 
-			this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP);
+			this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP, this.zkPor);
 
 			Thread.sleep(10000);
 
-			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.STOP);
+			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.STOP, this.zkPor);
 
 			Thread.sleep(10000);
 
-			this.doActionOnSolrNode("N3", versionOne, portThree, Action.STOP);
+			this.doActionOnSolrNode("N3", versionOne, portThree, Action.STOP, this.zkPor);
 			
 			
 		}

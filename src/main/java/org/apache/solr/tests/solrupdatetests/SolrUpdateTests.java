@@ -596,6 +596,22 @@ public class SolrUpdateTests {
 			String zkPort = argM.get(ARG_ZK_PORT);
 			String help = argM.get(ARG_HELP);
 			
+			String prtOne = argM.get(ARG_PORT_ONE);
+			String prtTwo = argM.get(ARG_PORT_TWO);
+			String prtThree = argM.get(ARG_PORT_THREE);
+			
+			if (prtOne != null) {
+				this.portOne = prtOne;
+			} 
+			
+			if (prtTwo != null) {
+				this.portTwo = prtTwo;
+			}
+			
+			if (prtThree != null) {
+				this.portThree = prtThree;
+			}
+			
 			if (help != null) {
 				this.postMessage(HELP_L1);
 				this.postMessage(HELP_L2);

@@ -608,7 +608,7 @@ public class SolrUpdateTests {
 				return;
 			}
 			
-			if (zkPport != null)  {
+			if (zkPort != null)  {
 				this.zkPort = zkPort;
 			}				
 			

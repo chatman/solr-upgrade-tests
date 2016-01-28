@@ -76,7 +76,7 @@ public class SolrUpdateTests {
 	
 	public final String NODE_THREE_DIR = BASE_DIR + "N3/";
 
-	public final String HELLO = "[SOLR UPDATE TESTS] HOLA !!!";
+	public final String HELLO = "[SOLR UPDATE TESTS] HOLA !!! add -Help parameter to look for details on parameters";
 	
 	public final String CHECKING_BDIR = "Checking if base directory exists ...";
 	
@@ -164,6 +164,8 @@ public class SolrUpdateTests {
 	
 	public final String ARG_ZK_PORT = "-ZkP";
 	
+	public final String ARG_HELP = "-Help";
+	
 	public final String HELP_L1 = "This testing program requires following parameters to run ... ";
 	
 	public final String HELP_L2 = "-v1 {From Version: ex '5.4.0'}; -v2 {To Version: ex '5.4.1'} ";
@@ -177,6 +179,8 @@ public class SolrUpdateTests {
 	public final String HELP_L6 = "-WorkDirectory: {Define a working directory on your system ex '/home'}";
 	
 	public final String PORT_MISSING = "Port for each node is missing please define them through {-N1Port, -N2Port & -N3Port}";
+	
+	public final String HELP_L7 = "-Zkp {zookeeper port number}";
 	
 	public enum ReleaseType { SOLR,ZOOKEEPER };
 	
@@ -574,6 +578,8 @@ public class SolrUpdateTests {
 				this.postMessage(HELP_L4);
 				this.postMessage(HELP_L5);
 				this.postMessage(HELP_L6);
+				this.postMessage(HELP_L7);
+				
 				return;
 			}			
 			
@@ -588,6 +594,19 @@ public class SolrUpdateTests {
 			String rootDir	 = argM.get(ARG_WORK_DIR);
 			String collectionName = argM.get(COLLECTION_NAME);
 			String zkPort = argM.get(ARG_ZK_PORT);
+			String help = argM.get(ARG_HELP);
+			
+			if (help != null) {
+				this.postMessage(HELP_L1);
+				this.postMessage(HELP_L2);
+				this.postMessage(HELP_L3);
+				this.postMessage(HELP_L4);
+				this.postMessage(HELP_L5);
+				this.postMessage(HELP_L6);
+				this.postMessage(HELP_L7);
+				
+				return;
+			}
 			
 			if (zkPport != null)  {
 				this.zkPort = zkPort;

@@ -180,7 +180,7 @@ public class SolrUpdateTests {
 	
 	public final String PORT_MISSING = "Port for each node is missing please define them through {-N1Port, -N2Port & -N3Port}";
 	
-	public final String HELP_L7 = "-Zkp {zookeeper port number}";
+	public final String HELP_L7 = "-ZkP {zookeeper port number}";
 	
 	public enum ReleaseType { SOLR,ZOOKEEPER };
 	

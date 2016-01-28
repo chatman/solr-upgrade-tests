@@ -162,6 +162,8 @@ public class SolrUpdateTests {
 	
 	public final String ARG_COLLECTION_NAME = "-CollectionName";
 	
+	public final String ARG_ZK_PORT = "-ZkP";
+	
 	public final String HELP_L1 = "This testing program requires following parameters to run ... ";
 	
 	public final String HELP_L2 = "-v1 {From Version: ex '5.4.0'}; -v2 {To Version: ex '5.4.1'} ";
@@ -199,6 +201,8 @@ public class SolrUpdateTests {
 	public String portTwo = "1235";
 	
 	public String portThree = "1236";
+	
+	public String zkPort = "2181";
 	
 	public static String solrCommand;
 	
@@ -333,7 +337,7 @@ public class SolrUpdateTests {
 			return false;
 	}
 	
-	public void doActionOnSolrNode(String node, String version, String port, Action action) throws IOException, InterruptedException {
+	public void doActionOnSolrNode(String node, String version, String port, Action action, String zkPort) throws IOException, InterruptedException {
 		
 		
         Runtime rt = Runtime.getRuntime();
@@ -350,14 +354,14 @@ public class SolrUpdateTests {
         
         if ("N1".equals(node)) {
           new File(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
+        	proc = rt.exec(NODE_ONE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:" + zkPort);
         } else if ("N2".equals(node)) {
           new File(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
+        	proc = rt.exec(NODE_TWO_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:" + zkPort);
 
         } else if ("N3".equals(node)) {
           new File(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand).setExecutable(true);
-        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:2181");
+        	proc = rt.exec(NODE_THREE_DIR + "solr-"+ version + "/"+solrCommand+" " + act + " -p " + port + " -z 127.0.0.1:" + zkPort);
         }
         
         StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
@@ -395,11 +399,11 @@ public class SolrUpdateTests {
 		}
 		
 		
-		public void postData(String collectionName) throws IOException, InterruptedException, SolrServerException {
+		public void postData(String collectionName, String zkPort) throws IOException, InterruptedException, SolrServerException {
 			
 			this.postMessage(POSTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:" + zkPort);
 	        solr.connect();
 	        
 	        solr.setDefaultCollection(collectionName);
@@ -419,11 +423,11 @@ public class SolrUpdateTests {
 		}
 		
 		
-		public boolean verifyData(String collectionName) throws IOException, InterruptedException, SolrServerException {
+		public boolean verifyData(String collectionName, String zkPort) throws IOException, InterruptedException, SolrServerException {
 			
 			this.postMessage(GETTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:" + zkPort);
 	        solr.connect();	        
 	        solr.setDefaultCollection(collectionName);
 	        
@@ -448,11 +452,11 @@ public class SolrUpdateTests {
 	        return true;
 		}
 		
-		public void deleteData(String collectionName) throws IOException, InterruptedException, SolrServerException {
+		public void deleteData(String collectionName, String zkPort) throws IOException, InterruptedException, SolrServerException {
 			
 			this.postMessage(GETTING_DATA);
 			
-	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:2181");
+	        CloudSolrClient solr = new CloudSolrClient("127.0.0.1:" + zkPort);
 	        solr.connect();	        
 	        solr.setDefaultCollection(collectionName);	
 	        
@@ -583,6 +587,11 @@ public class SolrUpdateTests {
 			String versionTwo = argM.get(ARG_VERSION_TWO);
 			String rootDir	 = argM.get(ARG_WORK_DIR);
 			String collectionName = argM.get(COLLECTION_NAME);
+			String zkPort = argM.get(ARG_ZK_PORT);
+			
+			if (zkPport != null)  {
+				this.zkPort = zkPort;
+			}				
 			
 			COLLECTION_NAME += "" + UUID.randomUUID().toString();
 			
@@ -673,13 +682,13 @@ public class SolrUpdateTests {
 			
 			// MAIN TEST SEQUENCE HERE //
 			
-			this.doActionOnSolrNode("N1", versionOne, portOne, Action.START);
-			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.START);
-			this.doActionOnSolrNode("N3", versionOne, portThree, Action.START);
+			this.doActionOnSolrNode("N1", versionOne, portOne, Action.START, this.zkPort);
+			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.START, this.zkPort);
+			this.doActionOnSolrNode("N3", versionOne, portThree, Action.START, this.zkPort);
 			
 			this.createSOLRCollection("N1", versionOne, COLLECTION_NAME, NUM_SHARDS, NUM_REPLICAS);
 			
-			this.postData(COLLECTION_NAME);
+			this.postData(COLLECTION_NAME, this.zkPort);
 			
 			this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP);
 			Thread.sleep(10000);
@@ -688,7 +697,7 @@ public class SolrUpdateTests {
 			
 			Thread.sleep(10000);
 
-			boolean test1 = this.verifyData(COLLECTION_NAME);
+			boolean test1 = this.verifyData(COLLECTION_NAME, this.zkPort);
 			
 			this.doActionOnSolrNode("N2", versionOne, portTwo, Action.STOP);
 			Thread.sleep(10000);
@@ -697,7 +706,7 @@ public class SolrUpdateTests {
 			
 			Thread.sleep(10000);
 
-			boolean test2 = this.verifyData(COLLECTION_NAME);
+			boolean test2 = this.verifyData(COLLECTION_NAME, this.zkPort);
 
 			this.doActionOnSolrNode("N3", versionOne, portThree, Action.STOP);
 			Thread.sleep(10000);
@@ -706,7 +715,7 @@ public class SolrUpdateTests {
 			
 			Thread.sleep(10000);
 
-			boolean test3 = this.verifyData(COLLECTION_NAME);
+			boolean test3 = this.verifyData(COLLECTION_NAME, this.zkPort);
 					
 				
 			if(test1 && test2 && test3) {

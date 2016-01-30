@@ -57,7 +57,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.apache.solr.tests.solrupdatetests.SolrUpgradeTests</mainClass>
+							<mainClass>org.apache.solr.tests.solrupgradetests.SolrUpgradeTests</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

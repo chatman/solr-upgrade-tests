@@ -1,4 +1,4 @@
-package org.apache.solr.tests.solrupdatetests;
+package org.apache.solr.tests.solrupgradetests;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

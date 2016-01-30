@@ -141,6 +141,8 @@ public class SolrUpgradeTests {
 	public String ARG_PORT_TWO = "-N2Port";
 
 	public String ARG_PORT_THREE = "-N3Port";
+	
+	public String ARG_VERBOSE = "-Verbose";
 
 	public String ARG_COLLECTION_NAME = "-CollectionName";
 
@@ -207,6 +209,8 @@ public class SolrUpgradeTests {
 	public static String solrCommand;
 
 	public static String zooCommand;
+	
+	public boolean isVerbose = false;
 
 	public enum ReleaseType {
 		SOLR, ZOOKEEPER
@@ -299,14 +303,18 @@ public class SolrUpgradeTests {
 
 	public void postMessage(String message) {
 
-		System.out.println(message);
+		if (isVerbose) {
+			System.out.println(message);
+		}
 		logger.info(message);
 		
 	}
 
 	public void postMessageOnLine(String message) {
-		
-		System.out.print(message);
+
+		if (isVerbose) {
+			System.out.print(message);
+		}
 		logger.info(message);
 		
 	}
@@ -946,6 +954,13 @@ public class SolrUpgradeTests {
 		String prtOne = argM.get(ARG_PORT_ONE);
 		String prtTwo = argM.get(ARG_PORT_TWO);
 		String prtThree = argM.get(ARG_PORT_THREE);
+		String verbose = argM.get(ARG_VERBOSE);
+		
+		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
+			isVerbose = false;
+		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) { 
+			isVerbose = true;
+		}
 
 		if (prtOne != null) {
 			this.portOne = prtOne;

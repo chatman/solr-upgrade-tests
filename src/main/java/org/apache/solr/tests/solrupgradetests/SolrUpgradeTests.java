@@ -1126,9 +1126,9 @@ public class SolrUpgradeTests {
 		}
 
 		if (test1 && test2 && test3) {
-			this.postMessage("#### FINAL RESULT #### " + DATA_OK + " ####");
+			this.postMessage("\u001B[32m" + "#### FINAL RESULT #### " + DATA_OK + " ####" + "\u001B[0m");
 		} else {
-			this.postMessage("#### FINAL RESULT #### " + DATA_NOT_OK + " ####");
+			this.postMessage("\u001B[31m" + "#### FINAL RESULT #### " + DATA_NOT_OK + " ####" + "\u001B[0m");
 		}
 
 		int evp10 = this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP, this.zkPort);

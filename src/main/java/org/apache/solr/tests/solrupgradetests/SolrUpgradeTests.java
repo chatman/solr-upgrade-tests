@@ -323,7 +323,6 @@ public class SolrUpgradeTests {
 			byte[] bytesIn = new byte[4096];
 			int read = 0;
 			while ((read = zipIn.read(bytesIn)) != -1) {
-				this.postMessageOnLine(". ");
 				bos.write(bytesIn, 0, read);
 			}
 			bos.close();

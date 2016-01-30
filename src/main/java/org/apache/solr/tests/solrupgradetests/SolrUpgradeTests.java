@@ -954,18 +954,17 @@ public class SolrUpgradeTests {
 		String prtTwo = argM.get(ARG_PORT_TWO);
 		String prtThree = argM.get(ARG_PORT_THREE);
 		String verbose = argM.get(ARG_VERBOSE);
-
-		this.postMessage("#########################################################");
-		this.postMessage(HELLO);
-		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
-		this.postMessage("#########################################################");
-
 		
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
 			isVerbose = false;
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
 			isVerbose = true;
 		}
+
+		this.postMessage("#########################################################");
+		this.postMessage(HELLO);
+		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
+		this.postMessage("#########################################################");
 		
 		portOne = String.valueOf(this.getFreePort());
 		portTwo = String.valueOf(this.getFreePort());

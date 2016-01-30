@@ -198,6 +198,8 @@ public class SolrUpgradeTests {
 	public String UPGRADE_FAILED = "Upgrade failed due to some reason ...";
 
 	public String UPGRADE_COMPELETE = " Upgrade process complete ... ";
+	
+	public String ZOOKEEPER_STARTUP_FAILED = "Zookeeper startup failed, the test cannot continue ... exiting now !";
 
 	public static String solrCommand;
 
@@ -1014,7 +1016,10 @@ public class SolrUpgradeTests {
 			}
 		}
 		
-		this.postMessage("ZOOKEEPER PROCESS RETURN VALUE : " + String.valueOf(this.doActionOnZookeeper(Action.START)));
+		if(this.doActionOnZookeeper(Action.START) != 0) {
+			this.postMessage(ZOOKEEPER_STARTUP_FAILED);
+			return;
+		}
 		
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {

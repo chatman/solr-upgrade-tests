@@ -242,13 +242,13 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
+
 	public SolrUpgradeTests() {
-		
+
 		portOne = "" + this.getFreePort();
 		portTwo = "" + this.getFreePort();
-		portThree = "" + this.getFreePort();		
-		
+		portThree = "" + this.getFreePort();
+
 	}
 
 	public int getFreePort() {
@@ -277,7 +277,7 @@ public class SolrUpgradeTests {
 				}
 			}
 		}
-		
+
 		this.postMessage("Port " + port + " looks occupied trying another port number ... ");
 		return getFreePort();
 	}

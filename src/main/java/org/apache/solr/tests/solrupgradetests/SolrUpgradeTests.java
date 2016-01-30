@@ -204,7 +204,7 @@ public class SolrUpgradeTests {
 	};
 
 	public enum Location {
-		TEMP, NODE_ONE, NODE_TWO, NODE_THREE
+		TEMP, NODE_ONE, NODE_TWO, NODE_THREE, ZOOKEEPER_DIR
 	}
 
 	public enum Type {
@@ -788,6 +788,27 @@ public class SolrUpgradeTests {
 				this.postMessage(RELEASE_PRESENT);
 				return true;
 			}
+		} else if (name.equals(ReleaseType.ZOOKEEPER)) {
+			
+			if (location.equals(Location.TEMP)) {
+				if (type.equals(Type.COMPRESSED)) {
+					release = new File(TEMP_DIR + "zookeeper-" + version + ".tar.gz");
+				} else if (type.equals(Type.EXTRACTED)) {
+					release = new File(TEMP_DIR + "zookeeper-" + version);
+				}
+			} else if (location.equals(Location.ZOOKEEPER_DIR)) {
+				if (type.equals(Type.COMPRESSED)) {
+					release = new File(ZOOKEEPER_DIR + "zookeeper-" + version + ".tar.gz");
+				} else if (type.equals(Type.EXTRACTED)) {
+					release = new File(ZOOKEEPER_DIR + "zookeeper-" + version);
+				}
+			}
+			
+			if (release.exists()) {
+				this.postMessage(RELEASE_PRESENT);
+				return true;
+			}
+			
 		}
 
 		this.postMessage(RELEASE_DOWNLOAD);

@@ -966,7 +966,7 @@ public class SolrUpgradeTests {
 			this.zkPort = zkPort;
 		}
 
-		COLLECTION_NAME += "" + UUID.randomUUID().toString();
+		COLLECTION_NAME += UUID.randomUUID().toString();
 
 		if (collectionName != null) {
 			COLLECTION_NAME = collectionName;
@@ -1015,8 +1015,6 @@ public class SolrUpgradeTests {
 		}
 		
 		this.doActionOnZookeeper(Action.START);
-		this.doActionOnZookeeper(Action.STOP);
-		System.exit(0);
 		
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {
@@ -1128,8 +1126,6 @@ public class SolrUpgradeTests {
 			this.postMessage("#### FINAL RESULT #### " + DATA_NOT_OK + " ####");
 		}
 
-		Thread.sleep(10000);
-
 		int evp10 = this.doActionOnSolrNode("N1", versionOne, portOne, Action.STOP, this.zkPort);
 
 		if (evp10 != 0) {
@@ -1145,6 +1141,8 @@ public class SolrUpgradeTests {
 		if (evp12 != 0) {
 			this.postMessage("N3 " + NODES_SHUTDOWN_FAILURE);
 		}
+		
+		this.doActionOnZookeeper(Action.STOP);
 
 	}
 

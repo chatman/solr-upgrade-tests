@@ -24,7 +24,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
-public class SolrUpdateTests {
+public class SolrUpgradeTests {
 
 	public String URL_BASE = "http://archive.apache.org/dist/lucene/solr/";
 
@@ -924,7 +924,7 @@ public class SolrUpdateTests {
 
 	public static void main(String[] args) throws Exception {
 
-		new SolrUpdateTests().run(args);
+		new SolrUpgradeTests().run(args);
 
 	}
 }

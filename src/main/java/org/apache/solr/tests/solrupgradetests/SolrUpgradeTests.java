@@ -253,7 +253,7 @@ public class SolrUpgradeTests {
 
 	public int getFreePort() {
 
-		int port = ThreadLocalRandom.current().nextInt(10000, 99999);
+		int port = ThreadLocalRandom.current().nextInt(10000, 60000);
 		this.postMessage("Looking for a free port ... Checking availability of port number: " + port);
 		ServerSocket ss = null;
 		DatagramSocket ds = null;

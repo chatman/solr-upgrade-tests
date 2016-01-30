@@ -1014,7 +1014,7 @@ public class SolrUpgradeTests {
 			}
 		}
 		
-		this.doActionOnZookeeper(Action.START);
+		this.postMessage("ZOOKEEPER PROCESS RETURN VALUE : " + String.valueOf(this.doActionOnZookeeper(Action.START)));
 		
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {

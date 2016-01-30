@@ -26,8 +26,11 @@ import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.log4j.Logger;
 
 public class SolrUpgradeTests {
+	
+	final static Logger logger = Logger.getLogger(SolrUpgradeTests.class);
 
 	public String URL_BASE = "http://archive.apache.org/dist/lucene/solr/";
 
@@ -297,11 +300,15 @@ public class SolrUpgradeTests {
 	public void postMessage(String message) {
 
 		System.out.println(message);
-
+		logger.info(message);
+		
 	}
 
 	public void postMessageOnLine(String message) {
+		
 		System.out.print(message);
+		logger.info(message);
+		
 	}
 
 	public void downloadRelease(String version, String dir, ReleaseType what) throws IOException {

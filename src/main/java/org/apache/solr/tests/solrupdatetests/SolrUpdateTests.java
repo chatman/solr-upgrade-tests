@@ -271,9 +271,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			fos.close();
-			in.close();
-			fos.close();
 			this.postMessage(e.getMessage());
 
 		}
@@ -327,7 +324,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			bos.close();
 			this.postMessage(e.getMessage());
 
 		}
@@ -530,7 +526,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			solr.close();
 			this.postMessage(e.getMessage());
 
 		}
@@ -571,7 +566,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			solr.close();
 			this.postMessage(e.getMessage());
 			return false;
 
@@ -594,7 +588,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			solr.close();
 			this.postMessage(e.getMessage());
 
 		}
@@ -613,7 +606,6 @@ public class SolrUpdateTests {
 
 		} catch (Exception e) {
 
-			solr.close();
 			this.postMessage(e.getMessage());
 			return -1;
 

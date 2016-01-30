@@ -428,7 +428,7 @@ public class SolrUpgradeTests {
 
 			if ("N1".equals(node)) {
 				new File(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
-				this.postMessage(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
+				this.postMessage("##################### " + NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);
 				proc = rt.exec(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);

@@ -43,10 +43,16 @@ public class SolrUpgradeTests {
 	public String NODE_TWO_DIR = BASE_DIR + "N2" + File.separator;
 
 	public String NODE_THREE_DIR = BASE_DIR + "N3" + File.separator;
+	
+	public String ZOOKEEPER_DIR = BASE_DIR + "ZOOKEEPER" + File.separator;
 
 	public String HELLO = "[SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters";
 
 	public String CHECKING_BDIR = "Checking if base directory exists ...";
+	
+	public String CHECKING_ZOOKEEPER = "Checking if zookeeper directory exists ...";
+	
+	public String CREATING_ZOOKEEPER_DIR = "Creating zookeeper directory ...";
 
 	public String CHECKING_NDIR = "Checking if SOLR node directory exists ...";
 
@@ -181,6 +187,8 @@ public class SolrUpgradeTests {
 	public String ALL_NODES_NOT_UP = "All of the Nodes are not up ... Test seems failed ... ";
 
 	public String ADDED_DATA = "Added data into the cluster ...";
+	
+	public String ZOOKEEPER_RELEASE = "3.4.6";
 
 	public static String solrCommand;
 	
@@ -343,6 +351,27 @@ public class SolrUpgradeTests {
 			if (!baseDir.exists()) {
 				this.postMessage(CREATING_BDIR);
 				return baseDir.mkdir();
+			}
+			return false;
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage());
+			return false;
+
+		}
+
+	}
+	
+	
+	public boolean createZookeeperDir() {
+
+		try {
+			File zooDir = new File(ZOOKEEPER_DIR);
+			this.postMessage(CHECKING_ZOOKEEPER);
+			if (!zooDir.exists()) {
+				this.postMessage(CREATING_ZOOKEEPER_DIR);
+				return zooDir.mkdir();
 			}
 			return false;
 
@@ -785,6 +814,18 @@ public class SolrUpgradeTests {
 		this.postMessage(HELLO);
 		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
 
+		this.createZookeeperDir();
+		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED)) {
+			try {
+				this.downloadRelease(versionTwo, TEMP_DIR, ReleaseType.SOLR);
+				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
+			} catch (IOException e) {
+				this.postMessage(BAD_RELEASE_NAME);
+				return;
+			}
+		}		
+		
+		
 		if (this.createBaseDir()) {
 			this.postMessage(DIR_CREATED);
 		}
@@ -797,6 +838,16 @@ public class SolrUpgradeTests {
 
 		if (this.createTempDir()) {
 			this.postMessage(DIR_CREATED);
+		}
+		
+		this.createZookeeperDir();		
+		if (!this.checkForRelease(ZOOKEEPER_RELEASE, ReleaseType.ZOOKEEPER, Location.TEMP, Type.COMPRESSED)) {
+			try {
+				this.downloadRelease(ZOOKEEPER_RELEASE, TEMP_DIR, ReleaseType.ZOOKEEPER);
+			} catch (IOException e) {
+				this.postMessage(BAD_RELEASE_NAME);
+				return;
+			}
 		}
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {

@@ -535,6 +535,34 @@ public class SolrUpgradeTests {
 
 	}
 
+	public int renameZookeeperConfFile()
+			throws IOException, InterruptedException {
+
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		StreamGobbler errorGobbler = null;
+		StreamGobbler outputGobbler = null;
+
+		try {
+
+			proc = rt.exec("mv " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + "conf" + File.separator + "zoo_sample.cfg zoo.cfg");
+			
+			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+			proc.waitFor();
+			return proc.exitValue();
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage());
+			return -1;
+
+		}
+
+	}
 	
 	public int doActionOnZookeeper(String node, String port, Action action)
 			throws IOException, InterruptedException {
@@ -940,6 +968,7 @@ public class SolrUpgradeTests {
 			try {
 				this.downloadRelease(ZOOKEEPER_RELEASE, TEMP_DIR, ReleaseType.ZOOKEEPER);
 				this.extractZookeeperRelease();
+				this.renameZookeeperConfFile();
 			} catch (IOException e) {
 				this.postMessage(BAD_RELEASE_NAME);
 				return;

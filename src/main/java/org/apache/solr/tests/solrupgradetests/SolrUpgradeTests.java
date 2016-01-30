@@ -1043,9 +1043,9 @@ public class SolrUpgradeTests {
 		}
 
 		if (test1 && test2 && test3) {
-			this.postMessage(DATA_OK);
+			this.postMessage("#### FINAL RESULT #### " + DATA_OK + " ####");
 		} else {
-			this.postMessage(DATA_NOT_OK);
+			this.postMessage("#### FINAL RESULT #### " +DATA_NOT_OK + " ####");
 		}
 
 		Thread.sleep(10000);

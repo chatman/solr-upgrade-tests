@@ -152,22 +152,6 @@ public class SolrUpgradeTests {
 
 	public String HELP_L7 = "-ZkP {zookeeper port number}";
 
-	public enum ReleaseType {
-		SOLR, ZOOKEEPER
-	};
-
-	public enum Action {
-		START, STOP, ADD, UPDATE, DELETE, VERIFY
-	};
-
-	public enum Location {
-		TEMP, NODE_ONE, NODE_TWO, NODE_THREE
-	}
-
-	public enum Type {
-		COMPRESSED, EXTRACTED
-	}
-
 	public int TEST_DOCUMENTS_COUNT = 1000;
 
 	public String NUM_SHARDS = "2";
@@ -199,6 +183,23 @@ public class SolrUpgradeTests {
 	public String ADDED_DATA = "Added data into the cluster ...";
 
 	public static String solrCommand;
+	
+
+	public enum ReleaseType {
+		SOLR, ZOOKEEPER
+	};
+
+	public enum Action {
+		START, STOP, ADD, UPDATE, DELETE, VERIFY
+	};
+
+	public enum Location {
+		TEMP, NODE_ONE, NODE_TWO, NODE_THREE
+	}
+
+	public enum Type {
+		COMPRESSED, EXTRACTED
+	}
 
 	class StreamGobbler extends Thread {
 

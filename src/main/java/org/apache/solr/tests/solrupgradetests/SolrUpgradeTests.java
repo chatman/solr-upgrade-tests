@@ -505,13 +505,12 @@ public class SolrUpgradeTests {
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
-		String act = null;
 		StreamGobbler errorGobbler = null;
 		StreamGobbler outputGobbler = null;
 
 		try {
 
-			proc = rt.exec("tar -xvf " + TEMP_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + ".tar.gz");
+			proc = rt.exec("tar -xf " + TEMP_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + ".tar.gz" + " -C " + ZOOKEEPER_DIR);
 			
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");

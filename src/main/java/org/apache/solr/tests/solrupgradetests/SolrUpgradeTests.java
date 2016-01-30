@@ -189,6 +189,12 @@ public class SolrUpgradeTests {
 	public String ADDED_DATA = "Added data into the cluster ...";
 	
 	public String ZOOKEEPER_RELEASE = "3.4.6";
+	
+	public String ATTEMPTING_UPGRADE = "Attempting upgrade on the node by replacing lib folder ...";
+	
+	public String UPGRADE_FAILED = "Upgrade failed due to some reason ...";
+	
+	public String UPGRADE_COMPELETE = " Upgrade process complete ... ";
 
 	public static String solrCommand;
 	
@@ -728,6 +734,7 @@ public class SolrUpgradeTests {
 
 	public void upgradeSolr(String versionOne, String versionTwo, String node) throws IOException {
 
+		this.postMessage(ATTEMPTING_UPGRADE + "From: " + versionOne + " To: " + versionTwo);
 		try {
 			String localPath = File.separator + "server" + File.separator + "solr-webapp" + File.separator + "webapp"
 					+ File.separator + "WEB-INF" + File.separator + "lib";
@@ -743,9 +750,9 @@ public class SolrUpgradeTests {
 
 			FileUtils.cleanDirectory(dest);
 			FileUtils.copyDirectory(src, dest);
-
+			this.postMessage(UPGRADE_COMPELETE);
 		} catch (Exception e) {
-
+			this.postMessage(UPGRADE_FAILED);
 			this.postMessage(e.getMessage());
 
 		}

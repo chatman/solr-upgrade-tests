@@ -49,17 +49,17 @@ public class SolrUpgradeTests {
 
 	public String ZOOKEEPER_DIR = BASE_DIR + "ZOOKEEPER" + File.separator;
 
-	public String HELLO = "[SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters";
+	public String HELLO = "##### [SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters #####";
 
-	public String CHECKING_BDIR = "Checking if base directory exists ...";
+	public String CHECKING_BDIR = "** Checking if base directory exists ...";
 
-	public String CHECKING_ZOOKEEPER = "Checking if zookeeper directory exists ...";
+	public String CHECKING_ZOOKEEPER = "** Checking if zookeeper directory exists ...";
 
 	public String CREATING_ZOOKEEPER_DIR = "Creating zookeeper directory ...";
 
-	public String CHECKING_NDIR = "Checking if SOLR node directory exists ...";
+	public String CHECKING_NDIR = "** Checking if SOLR node directory exists ...";
 
-	public String CHECKING_TDIR = "Checking if temp directory exists ...";
+	public String CHECKING_TDIR = "** Checking if temp directory exists ...";
 
 	public String CREATING_BDIR = "Base directory does not exist, creating one ...";
 
@@ -71,31 +71,31 @@ public class SolrUpgradeTests {
 
 	public String DIR_CREATED = "Directory Successfully Created !";
 
-	public String DOWNLOADING_RELEASE = "Attempting to download release ...";
+	public String DOWNLOADING_RELEASE = "** Attempting to download release ...";
 
-	public String DOWNLOADING_ZOO_RELEASE = "Attempting to download zookeeper release ...";
+	public String DOWNLOADING_ZOO_RELEASE = "** Attempting to download zookeeper release ...";
 
-	public String UNZIP_RELEASE = "Attempting to unzip the downloaded release ...";
+	public String UNZIP_RELEASE = "** Attempting to unzip the downloaded release ...";
 
 	public String UNZIPPING_TO = "Unzipping to : ";
 
-	public String START_PROC = "Attempting to start solr node ...";
+	public String START_PROC = "** Attempting to start solr node ...";
 
-	public String START_ZOO = "Attempting to start zookeeper ...";
+	public String START_ZOO = "** Attempting to start zookeeper ...";
 
-	public String STOP_ZOO = "Attempting to stop zookeeper ...";
+	public String STOP_ZOO = "** Attempting to stop zookeeper ...";
 
 	public String STARTED_ZOO = "Zookeeper Started ...";
 
 	public String STOPPED_ZOO = "Zookeeper Started ...";
 
-	public String STOP_PROC = "Attempting to stop solr node ...";
+	public String STOP_PROC = "** Attempting to stop solr node ...";
 
 	public String NODE_STARTED = "Node Started ... ";
 
 	public String NODE_STOPPED = "Node Stopped ... ";
 
-	public String CHECK_RELEASE_DOWNLOADED = "Checking if release has been downloaded ...";
+	public String CHECK_RELEASE_DOWNLOADED = "** Checking if release has been downloaded ...";
 
 	public String RELEASE_PRESENT = "Release is present ...";
 
@@ -115,19 +115,19 @@ public class SolrUpgradeTests {
 
 	public String ARG_WORK_DIR = "-WorkDirectory";
 
-	public String CREATING_COLLECTION = "Creating collection, configuring shards and replication factor ... ";
+	public String CREATING_COLLECTION = "** Creating collection, configuring shards and replication factor ... ";
 
-	public String POSTING_DATA = "Posting data to the node ... ";
+	public String POSTING_DATA = "** Posting data to the node ... ";
 
-	public String GETTING_DATA = "Getting the data from nodes ... ";
+	public String GETTING_DATA = "** Getting the data from nodes ... ";
 
-	public String DELETING_DATA = "Deleting data from the nodes ... ";
+	public String DELETING_DATA = "** Deleting data from the nodes ... ";
 
-	public String VERIFYING_DATA = "Verifying data from nodes ... ";
+	public String VERIFYING_DATA = "** Verifying data from nodes ... ";
 
-	public String DATA_OK = "Data is verified and seems okay ...";
+	public String DATA_OK = "@@ Data is verified and seems okay ... @@";
 
-	public String DATA_NOT_OK = "Data has been corrupted by this migration ... ";
+	public String DATA_NOT_OK = "@@ Data has been corrupted by this migration ... @@";
 
 	public String ARG_ERROR_VERSION_NULL = "SOLRUpdateTests Says: Need two SOLR versions to conduct this test ...";
 
@@ -179,7 +179,7 @@ public class SolrUpgradeTests {
 
 	public String zkIP = "127.0.0.1";
 
-	public String GETTING_LIVE_NODES = "Attempting to get live nodes on the cluster ... ";
+	public String GETTING_LIVE_NODES = "** Attempting to get live nodes on the cluster ... ";
 
 	public String NODES_LAUNCH_FAILURE = "Node startup failed for some reason ... ";
 
@@ -193,7 +193,7 @@ public class SolrUpgradeTests {
 
 	public String ZOOKEEPER_RELEASE = "3.4.6";
 
-	public String ATTEMPTING_UPGRADE = "Attempting upgrade on the node by replacing lib folder ...";
+	public String ATTEMPTING_UPGRADE = "** Attempting upgrade on the node by replacing lib folder ...";
 
 	public String UPGRADE_FAILED = "Upgrade failed due to some reason ...";
 

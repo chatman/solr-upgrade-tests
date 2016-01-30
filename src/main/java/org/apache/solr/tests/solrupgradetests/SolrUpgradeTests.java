@@ -192,6 +192,8 @@ public class SolrUpgradeTests {
 
 	public static String solrCommand;
 	
+	public static String zooCommand;
+	
 
 	public enum ReleaseType {
 		SOLR, ZOOKEEPER
@@ -234,8 +236,13 @@ public class SolrUpgradeTests {
 	}
 
 	static {
+		
 		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
 				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
+		
+		zooCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
+				? "bin" + File.separator + "zkServer.cmd" : "bin" + File.separator + "zkServer";
+		
 	}
 
 	public void postMessage(String message) {
@@ -474,6 +481,78 @@ public class SolrUpgradeTests {
 				proc = rt.exec(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);
 			}
+
+			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+			proc.waitFor();
+			return proc.exitValue();
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage());
+			return -1;
+
+		}
+
+	}
+	
+	
+	public int extractZookeeperRelease()
+			throws IOException, InterruptedException {
+
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		String act = null;
+		StreamGobbler errorGobbler = null;
+		StreamGobbler outputGobbler = null;
+
+		try {
+
+			proc = rt.exec("tar -xvf " + TEMP_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + ".tar.gz");
+			
+			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+			proc.waitFor();
+			return proc.exitValue();
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage());
+			return -1;
+
+		}
+
+	}
+
+	
+	public int doActionOnZookeeper(String node, String port, Action action)
+			throws IOException, InterruptedException {
+
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		String act = null;
+		StreamGobbler errorGobbler = null;
+		StreamGobbler outputGobbler = null;
+
+		try {
+
+			if (action.equals(Action.START)) {
+				act = "start";
+				this.postMessage(START_ZOO);
+			} else if (action.equals(Action.STOP)) {
+				act = "stop";
+				this.postMessage(STOP_ZOO);
+			}
+
+			new File(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand).setExecutable(true);
+			proc = rt.exec(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand + " " + act + " -p "
+					+ port + " -z " + zkIP + ":" + zkPort);
 
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
@@ -813,18 +892,6 @@ public class SolrUpgradeTests {
 
 		this.postMessage(HELLO);
 		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
-
-		this.createZookeeperDir();
-		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED)) {
-			try {
-				this.downloadRelease(versionTwo, TEMP_DIR, ReleaseType.SOLR);
-				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
-			} catch (IOException e) {
-				this.postMessage(BAD_RELEASE_NAME);
-				return;
-			}
-		}		
-		
 		
 		if (this.createBaseDir()) {
 			this.postMessage(DIR_CREATED);
@@ -841,9 +908,11 @@ public class SolrUpgradeTests {
 		}
 		
 		this.createZookeeperDir();		
+
 		if (!this.checkForRelease(ZOOKEEPER_RELEASE, ReleaseType.ZOOKEEPER, Location.TEMP, Type.COMPRESSED)) {
 			try {
 				this.downloadRelease(ZOOKEEPER_RELEASE, TEMP_DIR, ReleaseType.ZOOKEEPER);
+				this.extractZookeeperRelease();
 			} catch (IOException e) {
 				this.postMessage(BAD_RELEASE_NAME);
 				return;

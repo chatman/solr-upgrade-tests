@@ -925,7 +925,7 @@ public class SolrUpgradeTests {
 	}
 
 	public void run(String[] args) throws Exception {
-
+	
 		if (args.length == 0) {
 			this.postMessage(HELP_L1);
 			this.postMessage(HELP_L2);
@@ -955,6 +955,12 @@ public class SolrUpgradeTests {
 		String prtThree = argM.get(ARG_PORT_THREE);
 		String verbose = argM.get(ARG_VERBOSE);
 
+		this.postMessage("#########################################################");
+		this.postMessage(HELLO);
+		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
+		this.postMessage("#########################################################");
+
+		
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
 			isVerbose = false;
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
@@ -1011,9 +1017,6 @@ public class SolrUpgradeTests {
 		if (rootDir != null) {
 			this.WORK_DIRECTORY = rootDir;
 		}
-
-		this.postMessage(HELLO);
-		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
 
 		if (this.createBaseDir()) {
 			this.postMessage(DIR_CREATED);

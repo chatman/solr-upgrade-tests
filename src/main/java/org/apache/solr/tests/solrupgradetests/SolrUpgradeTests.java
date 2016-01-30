@@ -245,9 +245,9 @@ public class SolrUpgradeTests {
 
 	public SolrUpgradeTests() {
 
-		portOne = "" + this.getFreePort();
-		portTwo = "" + this.getFreePort();
-		portThree = "" + this.getFreePort();
+		portOne = String.valueOf(this.getFreePort());
+		portTwo = String.valueOf(this.getFreePort());
+		portThree = String.valueOf(this.getFreePort());
 
 	}
 

@@ -226,7 +226,8 @@ public class SolrUpgradeTests {
 	}
 
 	static {
-		 solrCommand = System.getProperty("os.name")!=null && System.getProperty("os.name").startsWith("Windows")? "bin/solr.cmd": "bin/solr";
+		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
+				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
 	}
 
 	public void postMessage(String message) {
@@ -428,8 +429,6 @@ public class SolrUpgradeTests {
 
 			if ("N1".equals(node)) {
 				new File(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
-				this.postMessage("##################### " + NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
-						+ port + " -z " + zkIP + ":" + zkPort);
 				proc = rt.exec(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);
 			} else if ("N2".equals(node)) {

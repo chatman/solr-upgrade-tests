@@ -257,11 +257,6 @@ public class SolrUpgradeTests {
 	}
 
 	public SolrUpgradeTests() {
-
-		portOne = String.valueOf(this.getFreePort());
-		portTwo = String.valueOf(this.getFreePort());
-		portThree = String.valueOf(this.getFreePort());
-
 	}
 
 	public int getFreePort() {
@@ -965,7 +960,12 @@ public class SolrUpgradeTests {
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
 			isVerbose = true;
 		}
+		
+		portOne = String.valueOf(this.getFreePort());
+		portTwo = String.valueOf(this.getFreePort());
+		portThree = String.valueOf(this.getFreePort());
 
+		
 		if (prtOne != null) {
 			this.portOne = prtOne;
 		}

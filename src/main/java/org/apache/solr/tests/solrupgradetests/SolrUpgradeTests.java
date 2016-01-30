@@ -9,10 +9,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -43,15 +46,15 @@ public class SolrUpgradeTests {
 	public String NODE_TWO_DIR = BASE_DIR + "N2" + File.separator;
 
 	public String NODE_THREE_DIR = BASE_DIR + "N3" + File.separator;
-	
+
 	public String ZOOKEEPER_DIR = BASE_DIR + "ZOOKEEPER" + File.separator;
 
 	public String HELLO = "[SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters";
 
 	public String CHECKING_BDIR = "Checking if base directory exists ...";
-	
+
 	public String CHECKING_ZOOKEEPER = "Checking if zookeeper directory exists ...";
-	
+
 	public String CREATING_ZOOKEEPER_DIR = "Creating zookeeper directory ...";
 
 	public String CHECKING_NDIR = "Checking if SOLR node directory exists ...";
@@ -187,19 +190,18 @@ public class SolrUpgradeTests {
 	public String ALL_NODES_NOT_UP = "All of the Nodes are not up ... Test seems failed ... ";
 
 	public String ADDED_DATA = "Added data into the cluster ...";
-	
+
 	public String ZOOKEEPER_RELEASE = "3.4.6";
-	
+
 	public String ATTEMPTING_UPGRADE = "Attempting upgrade on the node by replacing lib folder ...";
-	
+
 	public String UPGRADE_FAILED = "Upgrade failed due to some reason ...";
-	
+
 	public String UPGRADE_COMPELETE = " Upgrade process complete ... ";
 
 	public static String solrCommand;
-	
+
 	public static String zooCommand;
-	
 
 	public enum ReleaseType {
 		SOLR, ZOOKEEPER
@@ -240,15 +242,54 @@ public class SolrUpgradeTests {
 		}
 
 	}
+	
+	public SolrUpgradeTests() {
+		
+		portOne = "" + this.getFreePort();
+		portTwo = "" + this.getFreePort();
+		portThree = "" + this.getFreePort();		
+		
+	}
+
+	public int getFreePort() {
+
+		int port = ThreadLocalRandom.current().nextInt(10000, 99999);
+		this.postMessage("Looking for a free port ... Checking availability of port number: " + port);
+		ServerSocket ss = null;
+		DatagramSocket ds = null;
+		try {
+			ss = new ServerSocket(port);
+			ss.setReuseAddress(true);
+			ds = new DatagramSocket(port);
+			ds.setReuseAddress(true);
+			this.postMessage("Port " + port + " is free to use. Using this port !!");
+			return port;
+		} catch (IOException e) {
+		} finally {
+			if (ds != null) {
+				ds.close();
+			}
+
+			if (ss != null) {
+				try {
+					ss.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		
+		this.postMessage("Port " + port + " looks occupied trying another port number ... ");
+		return getFreePort();
+	}
 
 	static {
-		
+
 		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
 				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
-		
+
 		zooCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
 				? "bin" + File.separator + "zkServer.cmd" : "bin" + File.separator + "zkServer";
-		
+
 	}
 
 	public void postMessage(String message) {
@@ -256,7 +297,7 @@ public class SolrUpgradeTests {
 		System.out.println(message);
 
 	}
-	
+
 	public void postMessageOnLine(String message) {
 		System.out.print(message);
 	}
@@ -375,8 +416,7 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
-	
+
 	public boolean createZookeeperDir() {
 
 		try {
@@ -504,10 +544,8 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
-	
-	public int extractZookeeperRelease()
-			throws IOException, InterruptedException {
+
+	public int extractZookeeperRelease() throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -516,8 +554,9 @@ public class SolrUpgradeTests {
 
 		try {
 
-			proc = rt.exec("tar -xf " + TEMP_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + ".tar.gz" + " -C " + ZOOKEEPER_DIR);
-			
+			proc = rt.exec(
+					"tar -xf " + TEMP_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + ".tar.gz" + " -C " + ZOOKEEPER_DIR);
+
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
 
@@ -535,8 +574,7 @@ public class SolrUpgradeTests {
 
 	}
 
-	public int renameZookeeperConfFile()
-			throws IOException, InterruptedException {
+	public int renameZookeeperConfFile() throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -545,8 +583,9 @@ public class SolrUpgradeTests {
 
 		try {
 
-			proc = rt.exec("mv " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + "conf" + File.separator + "zoo_sample.cfg zoo.cfg");
-			
+			proc = rt.exec("mv " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + "conf"
+					+ File.separator + "zoo_sample.cfg zoo.cfg");
+
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
 
@@ -563,9 +602,8 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
-	public int doActionOnZookeeper(String node, String port, Action action)
-			throws IOException, InterruptedException {
+
+	public int doActionOnZookeeper(String node, String port, Action action) throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -583,9 +621,10 @@ public class SolrUpgradeTests {
 				this.postMessage(STOP_ZOO);
 			}
 
-			new File(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand).setExecutable(true);
-			proc = rt.exec(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand + " " + act + " -p "
-					+ port + " -z " + zkIP + ":" + zkPort);
+			new File(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand)
+					.setExecutable(true);
+			proc = rt.exec(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand + " " + act
+					+ " -p " + port + " -z " + zkIP + ":" + zkPort);
 
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
@@ -824,7 +863,7 @@ public class SolrUpgradeTests {
 				return true;
 			}
 		} else if (name.equals(ReleaseType.ZOOKEEPER)) {
-			
+
 			if (location.equals(Location.TEMP)) {
 				if (type.equals(Type.COMPRESSED)) {
 					release = new File(TEMP_DIR + "zookeeper-" + version + ".tar.gz");
@@ -838,12 +877,12 @@ public class SolrUpgradeTests {
 					release = new File(ZOOKEEPER_DIR + "zookeeper-" + version);
 				}
 			}
-			
+
 			if (release.exists()) {
 				this.postMessage(RELEASE_PRESENT);
 				return true;
 			}
-			
+
 		}
 
 		this.postMessage(RELEASE_DOWNLOAD);
@@ -947,7 +986,7 @@ public class SolrUpgradeTests {
 
 		this.postMessage(HELLO);
 		this.postMessage("Testing upgrade from " + versionOne + " To " + versionTwo);
-		
+
 		if (this.createBaseDir()) {
 			this.postMessage(DIR_CREATED);
 		}
@@ -961,8 +1000,8 @@ public class SolrUpgradeTests {
 		if (this.createTempDir()) {
 			this.postMessage(DIR_CREATED);
 		}
-		
-		this.createZookeeperDir();		
+
+		this.createZookeeperDir();
 
 		if (!this.checkForRelease(ZOOKEEPER_RELEASE, ReleaseType.ZOOKEEPER, Location.TEMP, Type.COMPRESSED)) {
 			try {
@@ -1081,7 +1120,7 @@ public class SolrUpgradeTests {
 		if (test1 && test2 && test3) {
 			this.postMessage("#### FINAL RESULT #### " + DATA_OK + " ####");
 		} else {
-			this.postMessage("#### FINAL RESULT #### " +DATA_NOT_OK + " ####");
+			this.postMessage("#### FINAL RESULT #### " + DATA_NOT_OK + " ####");
 		}
 
 		Thread.sleep(10000);

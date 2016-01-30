@@ -34,15 +34,15 @@ public class SolrUpdateTests {
 
 	public String DNAME = "SOLRUpdateTests";
 
-	public String BASE_DIR = WORK_DIRECTORY + File.pathSeparator + DNAME + File.pathSeparator;
+	public String BASE_DIR = WORK_DIRECTORY + File.separator + DNAME + File.separator;
 
-	public String TEMP_DIR = BASE_DIR + "temp" + File.pathSeparator;
+	public String TEMP_DIR = BASE_DIR + "temp" + File.separator;
 
-	public String NODE_ONE_DIR = BASE_DIR + "N1" + File.pathSeparator;
+	public String NODE_ONE_DIR = BASE_DIR + "N1" + File.separator;
 
-	public String NODE_TWO_DIR = BASE_DIR + "N2" + File.pathSeparator;
+	public String NODE_TWO_DIR = BASE_DIR + "N2" + File.separator;
 
-	public String NODE_THREE_DIR = BASE_DIR + "N3" + File.pathSeparator;
+	public String NODE_THREE_DIR = BASE_DIR + "N3" + File.separator;
 
 	public String HELLO = "[SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters";
 
@@ -226,7 +226,7 @@ public class SolrUpdateTests {
 
 	static {
 		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
-				? "bin " + File.pathSeparator + " solr.cmd" : "bin " + File.pathSeparator + "solr";
+				? "bin " + File.separator + " solr.cmd" : "bin " + File.separator + "solr";
 	}
 
 	public void postMessage(String message) {
@@ -246,13 +246,13 @@ public class SolrUpdateTests {
 
 			if (what.equals(ReleaseType.SOLR)) {
 				fileName = "solr-" + version + ".zip";
-				String url = URL_BASE + File.pathSeparator + version + File.pathSeparator + fileName;
+				String url = URL_BASE + File.separator + version + File.separator + fileName;
 				this.postMessage(DOWNLOADING_RELEASE + " " + version + " from " + url);
 				link = new URL(url);
 			} else if (what.equals(ReleaseType.ZOOKEEPER)) {
 				this.postMessage(DOWNLOADING_ZOO_RELEASE + " : " + version);
 				fileName = "zookeeper-" + version + ".tar.gz";
-				link = new URL(ZOO_URL_BASE + "zookeeper-" + version + File.pathSeparator + fileName);
+				link = new URL(ZOO_URL_BASE + "zookeeper-" + version + File.separator + fileName);
 			}
 
 			in = new BufferedInputStream(link.openStream());
@@ -431,17 +431,17 @@ public class SolrUpdateTests {
 			}
 
 			if ("N1".equals(node)) {
-				new File(NODE_ONE_DIR + "solr-" + version + File.pathSeparator + solrCommand).setExecutable(true);
-				proc = rt.exec(NODE_ONE_DIR + "solr-" + version + File.pathSeparator + solrCommand + " " + act + " -p "
+				new File(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
+				proc = rt.exec(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);
 			} else if ("N2".equals(node)) {
-				new File(NODE_TWO_DIR + "solr-" + version + File.pathSeparator + solrCommand).setExecutable(true);
-				proc = rt.exec(NODE_TWO_DIR + "solr-" + version + File.pathSeparator + solrCommand + " " + act + " -p "
+				new File(NODE_TWO_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
+				proc = rt.exec(NODE_TWO_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
 						+ port + " -z " + zkIP + ":" + zkPort);
 
 			} else if ("N3".equals(node)) {
-				new File(NODE_THREE_DIR + "solr-" + version + File.pathSeparator + solrCommand).setExecutable(true);
-				proc = rt.exec(NODE_THREE_DIR + "solr-" + version + File.pathSeparator + solrCommand + " " + act
+				new File(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
+				proc = rt.exec(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand + " " + act
 						+ " -p " + port + " -z " + zkIP + ":" + zkPort);
 			}
 
@@ -475,15 +475,15 @@ public class SolrUpdateTests {
 
 			if ("N1".equals(node)) {
 				proc = rt.exec(
-						NODE_ONE_DIR + "solr-" + version + File.pathSeparator + solrCommand + " create_collection -c "
+						NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
 								+ collectionName + " -shards " + shards + " -replicationFactor " + replicationFactor);
 			} else if ("N2".equals(node)) {
 				proc = rt.exec(
-						NODE_TWO_DIR + "solr-" + version + File.pathSeparator + solrCommand + " create_collection -c "
+						NODE_TWO_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
 								+ collectionName + " -shards " + shards + " -replicationFactor " + replicationFactor);
 			} else if ("N3".equals(node)) {
 				proc = rt.exec(
-						NODE_THREE_DIR + "solr-" + version + File.pathSeparator + solrCommand + " create_collection -c "
+						NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
 								+ collectionName + " -shards " + shards + " -replicationFactor " + replicationFactor);
 			}
 
@@ -624,8 +624,8 @@ public class SolrUpdateTests {
 	public void upgradeSolr(String versionOne, String versionTwo, String node) throws IOException {
 
 		try {
-			String localPath = File.pathSeparator + "server" + File.pathSeparator + "solr-webapp" + File.pathSeparator
-					+ "webapp" + File.pathSeparator + "WEB-INF" + File.pathSeparator + "lib";
+			String localPath = File.separator + "server" + File.separator + "solr-webapp" + File.separator
+					+ "webapp" + File.separator + "WEB-INF" + File.separator + "lib";
 			File src = new File(TEMP_DIR + "solr-" + versionTwo + localPath);
 			File dest = null;
 			if ("N1".equals(node)) {

@@ -243,7 +243,7 @@ public class SolrUpgradeTests {
 					System.out.println("SubProcess Output >> " + type + " >> " + line);
 			} catch (IOException ioe) {
 				System.out.println(ioe.getMessage());
-			}
+			} 
 		}
 
 	}

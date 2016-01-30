@@ -235,6 +235,10 @@ public class SolrUpgradeTests {
 		System.out.println(message);
 
 	}
+	
+	public void postMessageOnLine(String message) {
+		System.out.print(message);
+	}
 
 	public void downloadRelease(String version, String dir, ReleaseType what) throws IOException {
 
@@ -263,7 +267,7 @@ public class SolrUpgradeTests {
 			long size = 0;
 			while (-1 != (n = in.read(buf))) {
 				size += n;
-				this.postMessage("" + size);
+				this.postMessageOnLine(size + " ");
 				fos.write(buf, 0, n);
 			}
 			fos.close();
@@ -319,6 +323,7 @@ public class SolrUpgradeTests {
 			byte[] bytesIn = new byte[4096];
 			int read = 0;
 			while ((read = zipIn.read(bytesIn)) != -1) {
+				this.postMessageOnLine(". ");
 				bos.write(bytesIn, 0, read);
 			}
 			bos.close();
@@ -351,7 +356,7 @@ public class SolrUpgradeTests {
 
 	}
 
-	public boolean createNDir() {
+	public boolean createNodesDir() {
 
 		try {
 
@@ -518,8 +523,8 @@ public class SolrUpgradeTests {
 				document = new SolrInputDocument();
 				document.setField("EMP_ID", "EMP_ID@" + i);
 				document.setField("TITLE", "TITLE@" + i);
-
 				solr.add(collectionName, document);
+				this.postMessageOnLine(". ");
 			}
 			this.postMessage(ADDED_DATA);
 			solr.commit();
@@ -555,6 +560,7 @@ public class SolrUpgradeTests {
 					return false;
 				}
 				count++;
+				this.postMessageOnLine(". ");
 			}
 
 			if (count != TEST_DOCUMENTS_COUNT) {
@@ -784,7 +790,7 @@ public class SolrUpgradeTests {
 			this.postMessage(DIR_CREATED);
 		}
 
-		if (this.createNDir()) {
+		if (this.createNodesDir()) {
 			this.postMessage(DIR_CREATED);
 		}
 

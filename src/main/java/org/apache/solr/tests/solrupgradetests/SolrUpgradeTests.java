@@ -226,8 +226,7 @@ public class SolrUpgradeTests {
 	}
 
 	static {
-		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
-				? "bin " + File.separator + " solr.cmd" : "bin " + File.separator + "solr";
+		 solrCommand = System.getProperty("os.name")!=null && System.getProperty("os.name").startsWith("Windows")? "bin/solr.cmd": "bin/solr";
 	}
 
 	public void postMessage(String message) {

@@ -288,7 +288,7 @@ public class SolrUpgradeTests {
 				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
 
 		zooCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
-				? "bin" + File.separator + "zkServer.cmd" : "bin" + File.separator + "zkServer";
+				? "bin" + File.separator + "zkServer.cmd " : "bin" + File.separator + "zkServer.sh ";
 
 	}
 

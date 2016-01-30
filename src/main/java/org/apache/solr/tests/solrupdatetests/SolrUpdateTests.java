@@ -308,7 +308,7 @@ public class SolrUpdateTests {
 		} catch (Exception e) {
 
 			this.postMessage(e.getMessage());
-		
+
 		}
 	}
 
@@ -441,8 +441,8 @@ public class SolrUpdateTests {
 
 			} else if ("N3".equals(node)) {
 				new File(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand).setExecutable(true);
-				proc = rt.exec(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand + " " + act
-						+ " -p " + port + " -z " + zkIP + ":" + zkPort);
+				proc = rt.exec(NODE_THREE_DIR + "solr-" + version + File.separator + solrCommand + " " + act + " -p "
+						+ port + " -z " + zkIP + ":" + zkPort);
 			}
 
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
@@ -474,12 +474,12 @@ public class SolrUpdateTests {
 		try {
 
 			if ("N1".equals(node)) {
-				proc = rt.exec(
-						NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
+				proc = rt
+						.exec(NODE_ONE_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
 								+ collectionName + " -shards " + shards + " -replicationFactor " + replicationFactor);
 			} else if ("N2".equals(node)) {
-				proc = rt.exec(
-						NODE_TWO_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
+				proc = rt
+						.exec(NODE_TWO_DIR + "solr-" + version + File.separator + solrCommand + " create_collection -c "
 								+ collectionName + " -shards " + shards + " -replicationFactor " + replicationFactor);
 			} else if ("N3".equals(node)) {
 				proc = rt.exec(
@@ -624,8 +624,8 @@ public class SolrUpdateTests {
 	public void upgradeSolr(String versionOne, String versionTwo, String node) throws IOException {
 
 		try {
-			String localPath = File.separator + "server" + File.separator + "solr-webapp" + File.separator
-					+ "webapp" + File.separator + "WEB-INF" + File.separator + "lib";
+			String localPath = File.separator + "server" + File.separator + "solr-webapp" + File.separator + "webapp"
+					+ File.separator + "WEB-INF" + File.separator + "lib";
 			File src = new File(TEMP_DIR + "solr-" + versionTwo + localPath);
 			File dest = null;
 			if ("N1".equals(node)) {

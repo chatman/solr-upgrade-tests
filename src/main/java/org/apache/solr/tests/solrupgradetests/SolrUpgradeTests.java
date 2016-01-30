@@ -603,7 +603,7 @@ public class SolrUpgradeTests {
 
 	}
 
-	public int doActionOnZookeeper(String node, String port, Action action) throws IOException, InterruptedException {
+	public int doActionOnZookeeper(Action action) throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -623,8 +623,7 @@ public class SolrUpgradeTests {
 
 			new File(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand)
 					.setExecutable(true);
-			proc = rt.exec(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand + " " + act
-					+ " -p " + port + " -z " + zkIP + ":" + zkPort);
+			proc = rt.exec(ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + zooCommand + " " + act);
 
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
@@ -1013,6 +1012,10 @@ public class SolrUpgradeTests {
 				return;
 			}
 		}
+		
+		this.doActionOnZookeeper(Action.START);
+		System.exit(0);
+		
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {
 			if (this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED)) {

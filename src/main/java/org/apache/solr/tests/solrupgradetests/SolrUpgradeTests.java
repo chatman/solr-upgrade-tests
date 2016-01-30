@@ -1014,6 +1014,7 @@ public class SolrUpgradeTests {
 		}
 		
 		this.doActionOnZookeeper(Action.START);
+		this.doActionOnZookeeper(Action.STOP);
 		System.exit(0);
 		
 

@@ -29,7 +29,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.log4j.Logger;
 
 public class SolrUpgradeTests {
-	
+
 	final static Logger logger = Logger.getLogger(SolrUpgradeTests.class);
 
 	public String URL_BASE = "http://archive.apache.org/dist/lucene/solr/";
@@ -141,7 +141,7 @@ public class SolrUpgradeTests {
 	public String ARG_PORT_TWO = "-N2Port";
 
 	public String ARG_PORT_THREE = "-N3Port";
-	
+
 	public String ARG_VERBOSE = "-Verbose";
 
 	public String ARG_COLLECTION_NAME = "-CollectionName";
@@ -203,13 +203,13 @@ public class SolrUpgradeTests {
 	public String UPGRADE_FAILED = "Upgrade failed due to some reason ...";
 
 	public String UPGRADE_COMPELETE = " Upgrade process complete ... ";
-	
+
 	public String ZOOKEEPER_STARTUP_FAILED = "Zookeeper startup failed, the test cannot continue ... exiting now !";
 
 	public static String solrCommand;
 
 	public static String zooCommand;
-	
+
 	public boolean isVerbose = false;
 
 	public enum ReleaseType {
@@ -244,10 +244,14 @@ public class SolrUpgradeTests {
 				BufferedReader br = new BufferedReader(isr);
 				String line = null;
 				while ((line = br.readLine()) != null)
-					System.out.println("SubProcess Output >> " + type + " >> " + line);
+					if (isVerbose) {
+						System.out.println("SubProcess >> " + type + " >> " + line);
+					}
+				logger.info("SubProcess >> " + type + " >> " + line);
+
 			} catch (IOException ioe) {
 				System.out.println(ioe.getMessage());
-			} 
+			}
 		}
 
 	}
@@ -307,7 +311,7 @@ public class SolrUpgradeTests {
 			System.out.println(message);
 		}
 		logger.info(message);
-		
+
 	}
 
 	public void postMessageOnLine(String message) {
@@ -316,7 +320,7 @@ public class SolrUpgradeTests {
 			System.out.print(message);
 		}
 		logger.info(message);
-		
+
 	}
 
 	public void downloadRelease(String version, String dir, ReleaseType what) throws IOException {
@@ -601,8 +605,8 @@ public class SolrUpgradeTests {
 		try {
 
 			proc = rt.exec("mv " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + "conf"
-					+ File.separator + "zoo_sample.cfg " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE + File.separator + "conf"
-					+ File.separator + "zoo.cfg");
+					+ File.separator + "zoo_sample.cfg " + ZOOKEEPER_DIR + "zookeeper-" + ZOOKEEPER_RELEASE
+					+ File.separator + "conf" + File.separator + "zoo.cfg");
 
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
@@ -955,10 +959,10 @@ public class SolrUpgradeTests {
 		String prtTwo = argM.get(ARG_PORT_TWO);
 		String prtThree = argM.get(ARG_PORT_THREE);
 		String verbose = argM.get(ARG_VERBOSE);
-		
+
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
 			isVerbose = false;
-		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) { 
+		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
 			isVerbose = true;
 		}
 
@@ -1037,12 +1041,11 @@ public class SolrUpgradeTests {
 				return;
 			}
 		}
-		
-		if(this.doActionOnZookeeper(Action.START) != 0) {
+
+		if (this.doActionOnZookeeper(Action.START) != 0) {
 			this.postMessage(ZOOKEEPER_STARTUP_FAILED);
 			return;
 		}
-		
 
 		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED)) {
 			if (this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED)) {
@@ -1168,7 +1171,7 @@ public class SolrUpgradeTests {
 		if (evp12 != 0) {
 			this.postMessage("N3 " + NODES_SHUTDOWN_FAILURE);
 		}
-		
+
 		this.doActionOnZookeeper(Action.STOP);
 
 	}

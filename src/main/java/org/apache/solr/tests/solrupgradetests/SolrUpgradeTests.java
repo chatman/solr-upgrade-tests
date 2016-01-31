@@ -996,8 +996,6 @@ public class SolrUpgradeTests {
 			this.postMessage(DIR_CREATED);
 		}
 
-		this.cleanNodeDirs(nodeDirectoryMapping);
-
 		if (this.createTempDir()) {
 			this.postMessage(DIR_CREATED);
 		}

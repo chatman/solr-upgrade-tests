@@ -572,10 +572,10 @@ public class SolrUpgradeTests {
 
 			if (action.equals(Action.START)) {
 				act = "start";
-				this.postMessage(START_PROC + " : " + node, MessageType.ACTION, true);
+				this.postMessage(START_PROC + " : " + node, MessageType.RESULT_ERRROR, true);
 			} else if (action.equals(Action.STOP)) {
 				act = "stop";
-				this.postMessage(STOP_PROC + " : " + node, MessageType.ACTION, true);
+				this.postMessage(STOP_PROC + " : " + node, MessageType.RESULT_ERRROR, true);
 			}
 
 			new File(nodes.get(node) + "solr-" + version + File.separator + solrCommand).setExecutable(true);

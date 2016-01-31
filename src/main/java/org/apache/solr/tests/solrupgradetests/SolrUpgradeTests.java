@@ -743,6 +743,7 @@ public class SolrUpgradeTests {
 				if (!(document.getFieldValue("TITLE").toString().split("@", 2)[1]
 						.equals(document.getFieldValue("EMP_ID").toString().split("@", 2)[1]))) {
 					solr.close();
+					this.postMessage("\u001B[31m" + "%%%% DATA CORRUPTED, returning false  %%%%" + "\u001B[0m");
 					return false;
 				}
 				count++;
@@ -750,6 +751,7 @@ public class SolrUpgradeTests {
 			}
 
 			if (count != TEST_DOCUMENTS_COUNT) {
+				this.postMessage("\u001B[31m" + "%%%% DATA COUNT MISMATCH, returning false  %%%%" + "\u001B[0m");
 				solr.close();
 				return false;
 			}

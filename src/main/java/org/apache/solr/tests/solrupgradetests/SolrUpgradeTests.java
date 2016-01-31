@@ -518,10 +518,10 @@ public class SolrUpgradeTests {
 					this.postMessage(CREATING_NDIR, MessageType.ACTION, true);
 					if (action.equals(Action.CREATE)) {	
 											attempt = node.mkdir();
-											System.out.println("Directory Created: " + entry.getValue());
+											this.postMessage("Directory Created: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
 					} else if (action.equals(Action.DELETE)) {
 											attempt = node.delete();	
-											System.out.println("Directory Deleted: " + entry.getValue());
+											this.postMessage("Directory Deleted: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
 					}
 					if (!attempt) {
 						return false;
@@ -997,7 +997,7 @@ public class SolrUpgradeTests {
 				File node = new File(entry.getValue());
 				if (node.exists()) {
 					FileUtils.cleanDirectory(node);
-					System.out.println("Directory Cleaned: " + entry.getValue());
+					this.postMessage("Directory Cleaned: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
 				}
 
 			}

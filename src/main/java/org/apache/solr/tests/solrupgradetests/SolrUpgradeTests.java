@@ -81,9 +81,9 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 		}
 
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
-			isVerbose = false;
+			super.isVerbose = false;
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
-			isVerbose = true;
+			super.isVerbose = true;
 		}
 
 		this.postMessage("#########################################################", MessageType.GENERAL, false);

@@ -775,7 +775,7 @@ public class SolrUpgradeTests {
 				document.setField("EMP_ID", "EMP_ID@" + i);
 				document.setField("TITLE", "TITLE@" + i);
 				solr.add(collectionName, document);
-				this.postMessageOnLine(". ");
+				this.postMessageOnLine(".");
 			}
 			this.postMessage(ADDED_DATA, MessageType.RESULT_SUCCESS, true);
 			solr.commit();
@@ -812,7 +812,7 @@ public class SolrUpgradeTests {
 					return false;
 				}
 				count++;
-				this.postMessageOnLine(". ");
+				this.postMessageOnLine(".");
 			}
 
 			if (count != TEST_DOCUMENTS_COUNT) {

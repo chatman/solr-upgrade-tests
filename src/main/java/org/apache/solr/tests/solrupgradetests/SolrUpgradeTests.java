@@ -1075,7 +1075,7 @@ public class SolrUpgradeTests {
 			if(srv != 0) {
 				this.postMessage("Node startup failed for node ... : " + entry.getKey());
 			}
-			Thread.sleep(30000);
+			Thread.sleep(15000);
 		}		
 		
 		this.createSOLRCollection(1, versionOne, COLLECTION_NAME, NUM_SHARDS, NUM_REPLICAS, nodeDirectoryMapping);
@@ -1088,9 +1088,11 @@ public class SolrUpgradeTests {
 			if (hasNodeStopped != 0) {
 				this.postMessage("Node :" + entry.getKey() + NODES_SHUTDOWN_FAILURE);
 			}
-			
-			this.upgradeSolr(versionOne, versionTwo, entry.getKey(), nodeDirectoryMapping);
 
+			Thread.sleep(15000);
+
+			this.upgradeSolr(versionOne, versionTwo, entry.getKey(), nodeDirectoryMapping);
+			
 			int hasNodeStarted = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.START, this.zkPort, nodeDirectoryMapping);
 			if (hasNodeStarted != 0) {
 				this.postMessage("Node :" + entry.getKey() + NODES_LAUNCH_FAILURE);
@@ -1102,7 +1104,7 @@ public class SolrUpgradeTests {
 						this.postMessage("Data Integrity failed on node : " + entry.getKey());
 					}
 			}
-			Thread.sleep(30000);
+			Thread.sleep(15000);
 
 		}		
 		
@@ -1127,13 +1129,11 @@ public class SolrUpgradeTests {
 				this.postMessage("Node: " + entry.getKey() + NODES_SHUTDOWN_FAILURE);
 			}	
 
-			Thread.sleep(30000);
+			Thread.sleep(5000);
 
 		}		
 		
 		this.doActionOnNodesDir(nodeDirectoryMapping, Action.DELETE);
-		
-		Thread.sleep(30000);
 		
 		this.doActionOnZookeeper(Action.STOP);
 

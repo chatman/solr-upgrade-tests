@@ -24,15 +24,6 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 
 	}
 
-	static {
-
-		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
-				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
-
-		zooCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
-				? "bin" + File.separator + "zkServer.cmd " : "bin" + File.separator + "zkServer.sh ";
-
-	}
 
 	public void run(String[] args) throws Exception {
 

@@ -21,35 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 public class SolrUpgradeTestsUtil {
-
-	class StreamGobbler extends Thread {
-
-		InputStream is;
-		String type;
-
-		StreamGobbler(InputStream is, String type) {
-			this.is = is;
-			this.type = type;
-		}
-
-		public void run() {
-			try {
-				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(isr);
-				String line = null;
-				while ((line = br.readLine()) != null)
-					if (isVerbose) {
-						SolrUpgradeTestsUtil.this.postMessage("  SubProcess: " + type + " >> " + line,
-								MessageType.PROCESS, true);
-					}
-
-			} catch (IOException ioe) {
-				SolrUpgradeTestsUtil.this.postMessage(ioe.getMessage(), MessageType.RESULT_ERRROR, true);
-			}
-		}
-
-	}
-
+	
 	final static Logger logger = Logger.getLogger(SolrUpgradeTestsUtil.class);
 	public String URL_BASE = "http://archive.apache.org/dist/lucene/solr/";
 	public String ZOO_URL_BASE = "http://www.us.apache.org/dist/zookeeper/";
@@ -94,7 +66,7 @@ public class SolrUpgradeTestsUtil {
 	public int numNodes = 3;
 	public Map<Integer, String> nodeDirectoryMapping;
 	public Map<Integer, String> nodePortMapping;
-
+	
 	public enum ReleaseType {
 		SOLR, ZOOKEEPER
 	};
@@ -114,6 +86,45 @@ public class SolrUpgradeTestsUtil {
 	public enum Type {
 		COMPRESSED, EXTRACTED
 	};
+
+	class StreamGobbler extends Thread {
+
+		InputStream is;
+		String type;
+
+		StreamGobbler(InputStream is, String type) {
+			this.is = is;
+			this.type = type;
+		}
+
+		public void run() {
+			try {
+				InputStreamReader isr = new InputStreamReader(is);
+				BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while ((line = br.readLine()) != null)
+					if (isVerbose) {
+						SolrUpgradeTestsUtil.this.postMessage("  SubProcess: " + type + " >> " + line,
+								MessageType.PROCESS, true);
+					}
+
+			} catch (IOException ioe) {
+				SolrUpgradeTestsUtil.this.postMessage(ioe.getMessage(), MessageType.RESULT_ERRROR, true);
+			}
+		}
+
+	}
+	
+	static {
+
+		solrCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
+				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
+
+		zooCommand = System.getProperty("os.name") != null && System.getProperty("os.name").startsWith("Windows")
+				? "bin" + File.separator + "zkServer.cmd " : "bin" + File.separator + "zkServer.sh ";
+
+	}
+
 
 	public int getFreePort() {
 

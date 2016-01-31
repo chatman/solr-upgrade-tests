@@ -21,11 +21,11 @@ public class SolrNode extends SolrUpgradeTestsUtil {
 
 			if (action.equals(Action.START)) {
 				act = "start";
-				this.postMessage("** Attempting to start solr node ..." + " : " + node, MessageType.RESULT_ERRROR,
+				super.postMessage("** Attempting to start solr node ..." + " : " + node, MessageType.RESULT_ERRROR,
 						true);
 			} else if (action.equals(Action.STOP)) {
 				act = "stop";
-				this.postMessage("** Attempting to stop solr node ..." + " : " + node, MessageType.RESULT_ERRROR, true);
+				super.postMessage("** Attempting to stop solr node ..." + " : " + node, MessageType.RESULT_ERRROR, true);
 			}
 
 			new File(nodes.get(node) + "solr-" + version + File.separator + solrCommand).setExecutable(true);

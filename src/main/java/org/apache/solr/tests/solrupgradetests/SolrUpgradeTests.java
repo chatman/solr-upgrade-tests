@@ -687,6 +687,35 @@ public class SolrUpgradeTests {
 
 	}
 
+	public int deleteZookeeperData() throws IOException, InterruptedException {
+
+		this.postMessage("Deleting directory for zookeeper data ", MessageType.ACTION, true);
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		StreamGobbler errorGobbler = null;
+		StreamGobbler outputGobbler = null;
+
+		try {
+			
+			proc = rt.exec("rm -r -f /tmp/zookeeper/" );
+			
+			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+			proc.waitFor();
+			return proc.exitValue();
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage(), MessageType.RESULT_ERRROR, true);
+			return -1;
+
+		}
+
+	}
+	
 	public int doActionOnZookeeper(Action action) throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
@@ -1201,6 +1230,7 @@ public class SolrUpgradeTests {
 		}		
 		
 		this.doActionOnZookeeper(Action.STOP);
+		this.deleteZookeeperData();
 
 	}
 

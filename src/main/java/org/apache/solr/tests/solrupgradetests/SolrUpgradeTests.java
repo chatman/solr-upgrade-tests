@@ -804,8 +804,11 @@ public class SolrUpgradeTests {
 				document.setField("EMP_ID", "EMP_ID@" + i);
 				document.setField("TITLE", "TITLE@" + i);
 				solr.add(collectionName, document);
-				this.postMessageOnLine(".");
+				if (i % 50 == 0) {
+					this.postMessageOnLine(" | ");
+				}
 			}
+			this.postMessage("", MessageType.GENERAL, false);
 			this.postMessage(ADDED_DATA, MessageType.RESULT_SUCCESS, true);
 			solr.commit();
 			solr.close();
@@ -841,8 +844,11 @@ public class SolrUpgradeTests {
 					return false;
 				}
 				count++;
-				this.postMessageOnLine(".");
+				if (count % 50 == 0) {
+					this.postMessageOnLine(" | ");
+				}
 			}
+			this.postMessage("", MessageType.GENERAL, false);
 
 			if (count != TEST_DOCUMENTS_COUNT) {
 				this.postMessage("%%%% DATA COUNT MISMATCH, returning false  %%%%", MessageType.RESULT_ERRROR, true);

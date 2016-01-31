@@ -149,6 +149,10 @@ public class SolrUpgradeTests {
 	public String ARG_ZK_PORT = "-ZkP";
 
 	public String ARG_HELP = "-Help";
+	
+	public String ARG_NUM_SHARDS = "-NShards";
+	
+	public String ARG_NUM_REPLICAS = "-NReplicas";
 
 	public String ARG_NUM_NODES = "-NNodes";
 
@@ -1032,6 +1036,16 @@ public class SolrUpgradeTests {
 		String help = argM.get(ARG_HELP);
 		String verbose = argM.get(ARG_VERBOSE);
 		String numNodesI = argM.get(ARG_NUM_NODES);
+		String numShards = argM.get(ARG_NUM_SHARDS);
+		String numReplicas = argM.get(ARG_NUM_REPLICAS);
+		
+		if (numShards != null) {
+			NUM_SHARDS = numShards;
+		}
+		
+		if (numReplicas != null) {
+			NUM_REPLICAS = numReplicas;
+		}
 
 		if (numNodesI != null) {
 			numNodes = Integer.parseInt(numNodesI);

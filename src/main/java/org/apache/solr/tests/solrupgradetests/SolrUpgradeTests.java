@@ -275,12 +275,12 @@ public class SolrUpgradeTests {
 				String line = null;
 				while ((line = br.readLine()) != null)
 					if (isVerbose) {
-						System.out.println("SubProcess >> " + type + " >> " + line);
+						SolrUpgradeTests.this.postMessage("SubProcess >> " + type + " >> " + line, MessageType.PROCESS, true);
 					}
-				logger.info("SubProcess >> " + type + " >> " + line);
+					logger.info("SubProcess >> " + type + " >> " + line);
 
 			} catch (IOException ioe) {
-				System.out.println(ioe.getMessage());
+				SolrUpgradeTests.this.postMessage(ioe.getMessage(), MessageType.RESULT_ERRROR, true);
 			}
 		}
 

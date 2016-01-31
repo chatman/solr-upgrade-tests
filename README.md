@@ -10,7 +10,8 @@ To Run
     
 Use the following command to run this program on server
 
-                 java -cp target/solr-upgrade-tests-1.0-SNAPSHOT-jar-with-dependencies.jar org.apache.solr.tests.solrupdatetests.SolrUpdateTests -v1 5.2.0 -v2 5.3.1 -NNodes 3
+                    mvn clean compile assembly:single
+                    java -cp target/solr-upgrade-tests-1.0-SNAPSHOT-jar-with-dependencies.jar org.apache.solr.tests.solrupdatetests.SolrUpdateTests -v1 5.2.0 -v2 5.3.1 -NNodes 3
 
 Program parameters
 ------------------
@@ -35,9 +36,16 @@ Following is the summary of the steps that the program follows to test the rolli
                 Insert a set of 1000 documents
                 Stop each node one by one, upgrade each node by replacing lib folder on server and then start each node
                 upon start of the node check if all the documents are present and that the documents are intact. 
-                When all the documents are present and the nodes are normal the program identifies as the test successful
-                Upon failure of any node or documents count or state abnormal the program declares as the test as failed.
+                When all the documents are present and the nodes are normal the program identifies the test as successful
+                Upon failure of any node or documents count or state abnormal the program declares the test as failed.
                 Final steps include shutting down the nodes and cleaning zookeeper data.
+
+
+Todo
+----
+
+                running against unreleased (master/branch_5x)
+                Making it easier to add more tests to this framework
 
 
 Contributing to this project
@@ -56,8 +64,9 @@ Import the project on eclise and do the following
 Contributions
 -------------
 
-                Ishan Chattopadhyaya
                 Vivek Narang
+                Ishan Chattopadhyaya
+                
     
 
   

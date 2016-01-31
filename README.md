@@ -56,8 +56,8 @@ Import the project on eclise and do the following
 Contributions
 -------------
 
-    Ishan Chattopadhyaya
-    Vivek Narang
+                Ishan Chattopadhyaya
+                Vivek Narang
     
 
   

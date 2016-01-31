@@ -275,9 +275,8 @@ public class SolrUpgradeTests {
 				String line = null;
 				while ((line = br.readLine()) != null)
 					if (isVerbose) {
-						SolrUpgradeTests.this.postMessage("SubProcess >> " + type + " >> " + line, MessageType.PROCESS, true);
+					SolrUpgradeTests.this.postMessage("					SubProcess: " + type + " >> " + line, MessageType.PROCESS, true);
 					}
-					logger.info("SubProcess >> " + type + " >> " + line);
 
 			} catch (IOException ioe) {
 				SolrUpgradeTests.this.postMessage(ioe.getMessage(), MessageType.RESULT_ERRROR, true);

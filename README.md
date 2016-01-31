@@ -1,4 +1,4 @@
-# solr-upgrade-tests
+# Solr Cloud Rolling Upgrade Tests
 Introduction
 ------------
 

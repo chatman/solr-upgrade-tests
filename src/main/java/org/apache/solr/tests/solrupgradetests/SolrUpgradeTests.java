@@ -1075,7 +1075,7 @@ public class SolrUpgradeTests {
 			if(srv != 0) {
 				this.postMessage("Node startup failed for node ... : " + entry.getKey());
 			}
-			
+			Thread.sleep(30000);
 		}		
 		
 		this.createSOLRCollection(1, versionOne, COLLECTION_NAME, NUM_SHARDS, NUM_REPLICAS, nodeDirectoryMapping);
@@ -1101,7 +1101,9 @@ public class SolrUpgradeTests {
 					if (!isDataIntact) {
 						this.postMessage("Data Integrity failed on node : " + entry.getKey());
 					}
-			}			
+			}
+			Thread.sleep(30000);
+
 		}		
 		
 		if (this.getLiveNodes() == numNodes) {
@@ -1123,10 +1125,15 @@ public class SolrUpgradeTests {
 			int isNodeDownProperly = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
 			if (isNodeDownProperly != 0) {
 				this.postMessage("Node: " + entry.getKey() + NODES_SHUTDOWN_FAILURE);
-			}			
+			}	
+
+			Thread.sleep(30000);
+
 		}		
 		
 		this.doActionOnNodesDir(nodeDirectoryMapping, Action.DELETE);
+		
+		Thread.sleep(30000);
 		
 		this.doActionOnZookeeper(Action.STOP);
 

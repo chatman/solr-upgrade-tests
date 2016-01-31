@@ -225,7 +225,7 @@ public class SolrUpgradeTests {
 	};
 
 	public enum Action {
-		START, STOP, ADD, UPDATE, DELETE, VERIFY
+		START, STOP, ADD, UPDATE, DELETE, VERIFY, CREATE
 	};
 
 	public enum Location {
@@ -465,28 +465,33 @@ public class SolrUpgradeTests {
 
 	}
 
-	public boolean createNodesDir(Map<Integer, String> nodes) {
+	public boolean doActionOnNodesDir(Map<Integer, String> nodes, Action action) {
 
 		try {
 
 			this.postMessage(CHECKING_NDIR);
 
-			boolean creationAttempt = true;
+			boolean attempt = true;
 			for (Map.Entry<Integer, String> entry : nodes.entrySet()) {
 
 				File node = new File(entry.getValue());
 				if (!node.exists()) {
 					this.postMessage(CREATING_NDIR);
-					creationAttempt = node.mkdir();
-					if (!creationAttempt) {
+					if (action.equals(Action.CREATE)) {	
+											attempt = node.mkdir();
+											System.out.println("Directory Created: " + entry.getValue());
+					} else if (action.equals(Action.DELETE)) {
+											attempt = node.delete();	
+											System.out.println("Directory Deleted: " + entry.getValue());
+					}
+					if (!attempt) {
 						return false;
 					}
 				}
 
-				System.out.println("Directory Created: " + entry.getValue());
 			}
 
-			return creationAttempt;
+			return attempt;
 
 		} catch (Exception e) {
 
@@ -987,7 +992,7 @@ public class SolrUpgradeTests {
 			this.postMessage(DIR_CREATED);
 		}
 
-		if (this.createNodesDir(nodeDirectoryMapping)) {
+		if (this.doActionOnNodesDir(nodeDirectoryMapping, Action.CREATE)) {
 			this.postMessage(DIR_CREATED);
 		}
 
@@ -1120,6 +1125,8 @@ public class SolrUpgradeTests {
 				this.postMessage("Node: " + entry.getKey() + NODES_SHUTDOWN_FAILURE);
 			}			
 		}		
+		
+		this.doActionOnNodesDir(nodeDirectoryMapping, Action.DELETE);
 		
 		this.doActionOnZookeeper(Action.STOP);
 

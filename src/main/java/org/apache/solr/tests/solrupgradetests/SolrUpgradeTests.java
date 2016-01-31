@@ -621,6 +621,35 @@ public class SolrUpgradeTests {
 		}
 
 	}
+	
+	public int deleteNodeDirectory(int node, Map<Integer, String> nodes) throws IOException, InterruptedException {
+
+		this.postMessage("Deleting directory for Node : " + node);
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		StreamGobbler errorGobbler = null;
+		StreamGobbler outputGobbler = null;
+
+		try {
+			
+			proc = rt.exec("rm -r -f " + nodes.get(node));
+			
+			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+			proc.waitFor();
+			return proc.exitValue();
+
+		} catch (Exception e) {
+
+			this.postMessage(e.getMessage());
+			return -1;
+
+		}
+
+	}
 
 	public int doActionOnZookeeper(Action action) throws IOException, InterruptedException {
 
@@ -1130,10 +1159,10 @@ public class SolrUpgradeTests {
 			}	
 
 			Thread.sleep(5000);
-
+			
+			this.deleteNodeDirectory(entry.getKey(), nodeDirectoryMapping);
+			
 		}		
-		
-		this.doActionOnNodesDir(nodeDirectoryMapping, Action.DELETE);
 		
 		this.doActionOnZookeeper(Action.STOP);
 

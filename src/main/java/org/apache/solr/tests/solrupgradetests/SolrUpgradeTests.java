@@ -343,7 +343,7 @@ public class SolrUpgradeTests {
 			} else if (type.equals(MessageType.GENERAL)) {
 				System.out.println(ANSI_BLUE + message + ANSI_RESET);
 			} else if (type.equals(MessageType.PROCESS)) {
-				System.out.println(ANSI_PURPLE + message + ANSI_RESET);
+				System.out.println(ANSI_YELLOW + message + ANSI_RESET);
 			} else 	if (type.equals(MessageType.RESULT_ERRROR)) {
 				System.out.println(ANSI_RED + message + ANSI_RESET);
 			} else 	if (type.equals(MessageType.RESULT_SUCCESS)) {

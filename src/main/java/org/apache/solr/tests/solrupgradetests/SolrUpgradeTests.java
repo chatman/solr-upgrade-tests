@@ -1115,7 +1115,7 @@ public class SolrUpgradeTests {
 		
 		for (Map.Entry<Integer, String> entry : nodeDirectoryMapping.entrySet()) {
 
-			int isNodeDownProperly = this.doActionOnSolrNode(entry.getKey(), versionOne, portOne, Action.STOP, this.zkPort, nodeDirectoryMapping);
+			int isNodeDownProperly = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
 			if (isNodeDownProperly != 0) {
 				this.postMessage("Node: " + entry.getKey() + NODES_SHUTDOWN_FAILURE);
 			}			

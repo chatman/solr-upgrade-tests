@@ -12,13 +12,11 @@ import org.apache.solr.common.SolrInputDocument;
 
 public class ZookeeperNode extends SolrUpgradeTestsUtil {
 	
-	private boolean isVerbose = false;
-	
+
 	public ZookeeperNode(boolean isVerbose) {
 
 		super();
-		this.isVerbose = isVerbose;
-		super.setVerbose(this.isVerbose);	
+		super.setVerbose(isVerbose);	
 
 	}
 

@@ -14,7 +14,6 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 	final static Logger logger = Logger.getLogger(SolrUpgradeTests.class);
 	private SolrNode solrNode = null;
 	private ZookeeperNode zookeeperNode = null;
-	private boolean isVerbose = false;
 
 	public SolrUpgradeTests() {
 	
@@ -80,11 +79,17 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 		}
 
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
-			this.isVerbose = false;
+			
+			solrNode = new SolrNode(false);
+			zookeeperNode = new ZookeeperNode(false);
 			super.isVerbose = false;
+
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
-			this.isVerbose = true;
+			
+			solrNode = new SolrNode(true);
+			zookeeperNode = new ZookeeperNode(true);
 			super.isVerbose = true;
+
 		}
 
 		solrNode = new SolrNode(this.isVerbose);

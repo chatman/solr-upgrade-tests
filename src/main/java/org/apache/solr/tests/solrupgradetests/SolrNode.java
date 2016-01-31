@@ -8,13 +8,11 @@ import org.apache.commons.io.FileUtils;
 
 public class SolrNode extends SolrUpgradeTestsUtil {
 	
-	private boolean isVerbose = false;
-	
+
 	public SolrNode(boolean isVerbose) {
 		
 		super();
-		this.isVerbose = isVerbose;
-		super.setVerbose(this.isVerbose);
+		super.setVerbose(isVerbose);
 		
 	}
 

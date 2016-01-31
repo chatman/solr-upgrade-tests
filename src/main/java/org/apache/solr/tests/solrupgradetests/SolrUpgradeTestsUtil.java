@@ -66,7 +66,15 @@ public class SolrUpgradeTestsUtil {
 	public int numNodes = 3;
 	public Map<Integer, String> nodeDirectoryMapping;
 	public Map<Integer, String> nodePortMapping;
-	
+
+	public boolean isVerbose() {
+		return isVerbose;
+	}
+
+	public void setVerbose(boolean isVerbose) {
+		this.isVerbose = isVerbose;
+	}
+
 	public enum ReleaseType {
 		SOLR, ZOOKEEPER
 	};

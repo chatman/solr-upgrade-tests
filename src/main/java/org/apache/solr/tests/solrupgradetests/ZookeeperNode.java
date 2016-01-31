@@ -11,6 +11,16 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
 public class ZookeeperNode extends SolrUpgradeTestsUtil {
+	
+	private boolean isVerbose = false;
+	
+	public ZookeeperNode(boolean isVerbose) {
+
+		super();
+		this.isVerbose = isVerbose;
+		super.setVerbose(this.isVerbose);	
+
+	}
 
 	public boolean createZookeeperDir() {
 

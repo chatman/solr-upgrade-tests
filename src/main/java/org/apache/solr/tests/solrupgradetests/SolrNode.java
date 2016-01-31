@@ -7,6 +7,16 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 public class SolrNode extends SolrUpgradeTestsUtil {
+	
+	private boolean isVerbose = false;
+	
+	public SolrNode(boolean isVerbose) {
+		
+		super();
+		this.isVerbose = isVerbose;
+		super.setVerbose(this.isVerbose);
+		
+	}
 
 	public int doActionOnSolrNode(int node, String version, String port, Action action, String zkPort,
 			Map<Integer, String> nodes) throws IOException, InterruptedException {
@@ -21,11 +31,11 @@ public class SolrNode extends SolrUpgradeTestsUtil {
 
 			if (action.equals(Action.START)) {
 				act = "start";
-				super.postMessage("** Attempting to start solr node ..." + " : " + node, MessageType.RESULT_ERRROR,
+				this.postMessage("** Attempting to start solr node ..." + " : " + node, MessageType.RESULT_ERRROR,
 						true);
 			} else if (action.equals(Action.STOP)) {
 				act = "stop";
-				super.postMessage("** Attempting to stop solr node ..." + " : " + node, MessageType.RESULT_ERRROR, true);
+				this.postMessage("** Attempting to stop solr node ..." + " : " + node, MessageType.RESULT_ERRROR, true);
 			}
 
 			new File(nodes.get(node) + "solr-" + version + File.separator + solrCommand).setExecutable(true);

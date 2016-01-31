@@ -14,13 +14,12 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 	final static Logger logger = Logger.getLogger(SolrUpgradeTests.class);
 	private SolrNode solrNode = null;
 	private ZookeeperNode zookeeperNode = null;
+	private boolean isVerbose = false;
 
 	public SolrUpgradeTests() {
-
+	
 		nodeDirectoryMapping = new HashMap<Integer, String>();
 		nodePortMapping = new HashMap<Integer, String>();
-		solrNode = new SolrNode();
-		zookeeperNode = new ZookeeperNode();
 
 	}
 
@@ -81,11 +80,15 @@ public class SolrUpgradeTests extends SolrUpgradeTestsUtil {
 		}
 
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
-			super.isVerbose = false;
+			this.isVerbose = false;
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
-			super.isVerbose = true;
+			this.isVerbose = true;
 		}
 
+		solrNode = new SolrNode(this.isVerbose);
+		zookeeperNode = new ZookeeperNode(this.isVerbose);
+
+		
 		this.postMessage("#########################################################", MessageType.GENERAL, false);
 		this.postMessage(
 				"##### [SOLR UPGRADE TESTS] HOLA !!! use -Help parameter to get more details on parameters #####",

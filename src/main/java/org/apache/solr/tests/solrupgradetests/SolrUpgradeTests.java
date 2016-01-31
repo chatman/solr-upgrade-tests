@@ -804,8 +804,8 @@ public class SolrUpgradeTests {
 				document.setField("EMP_ID", "EMP_ID@" + i);
 				document.setField("TITLE", "TITLE@" + i);
 				solr.add(collectionName, document);
-				if (i % 50 == 0) {
-					this.postMessageOnLine(" | ");
+				if (i % 10 == 0) {
+					this.postMessageOnLine("|");
 				}
 			}
 			this.postMessage("", MessageType.GENERAL, false);
@@ -844,8 +844,8 @@ public class SolrUpgradeTests {
 					return false;
 				}
 				count++;
-				if (count % 50 == 0) {
-					this.postMessageOnLine(" | ");
+				if (count % 10 == 0) {
+					this.postMessageOnLine("|");
 				}
 			}
 			this.postMessage("", MessageType.GENERAL, false);

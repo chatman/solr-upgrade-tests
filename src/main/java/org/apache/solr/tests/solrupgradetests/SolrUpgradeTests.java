@@ -149,9 +149,9 @@ public class SolrUpgradeTests {
 	public String ARG_ZK_PORT = "-ZkP";
 
 	public String ARG_HELP = "-Help";
-	
+
 	public String ARG_NUM_SHARDS = "-NShards";
-	
+
 	public String ARG_NUM_REPLICAS = "-NReplicas";
 
 	public String ARG_NUM_NODES = "-NNodes";
@@ -211,23 +211,23 @@ public class SolrUpgradeTests {
 	public String UPGRADE_COMPELETE = " Upgrade process complete ... ";
 
 	public String ZOOKEEPER_STARTUP_FAILED = "Zookeeper startup failed, the test cannot continue ... exiting now !";
-	
+
 	public final String ANSI_RESET = "\u001B[0m";
-	
+
 	public final String ANSI_BLACK = "\u001B[30m";
-	
+
 	public final String ANSI_RED = "\u001B[31m";
-	
+
 	public final String ANSI_GREEN = "\u001B[32m";
-	
+
 	public final String ANSI_YELLOW = "\u001B[33m";
-	
+
 	public final String ANSI_BLUE = "\u001B[34m";
-	
+
 	public final String ANSI_PURPLE = "\u001B[35m";
-	
+
 	public final String ANSI_CYAN = "\u001B[36m";
-	
+
 	public final String ANSI_WHITE = "\u001B[37m";
 
 	public static String solrCommand;
@@ -239,7 +239,7 @@ public class SolrUpgradeTests {
 	public int numNodes = 3;
 
 	public Map<Integer, String> nodeDirectoryMapping;
-	
+
 	public Map<Integer, String> nodePortMapping;
 
 	public enum ReleaseType {
@@ -247,9 +247,9 @@ public class SolrUpgradeTests {
 	};
 
 	public enum MessageType {
-		PROCESS, ACTION, RESULT_SUCCESS, RESULT_ERRROR, GENERAL 
+		PROCESS, ACTION, RESULT_SUCCESS, RESULT_ERRROR, GENERAL
 	};
-	
+
 	public enum Action {
 		START, STOP, ADD, UPDATE, DELETE, VERIFY, CREATE
 	};
@@ -279,7 +279,8 @@ public class SolrUpgradeTests {
 				String line = null;
 				while ((line = br.readLine()) != null)
 					if (isVerbose) {
-					SolrUpgradeTests.this.postMessage("  SubProcess: " + type + " >> " + line, MessageType.PROCESS, true);
+						SolrUpgradeTests.this.postMessage("  SubProcess: " + type + " >> " + line, MessageType.PROCESS,
+								true);
 					}
 
 			} catch (IOException ioe) {
@@ -299,7 +300,8 @@ public class SolrUpgradeTests {
 	public int getFreePort() {
 
 		int port = ThreadLocalRandom.current().nextInt(10000, 60000);
-		this.postMessage("Looking for a free port ... Checking availability of port number: " + port, MessageType.ACTION, true);
+		this.postMessage("Looking for a free port ... Checking availability of port number: " + port,
+				MessageType.ACTION, true);
 		ServerSocket ss = null;
 		DatagramSocket ds = null;
 		try {
@@ -323,7 +325,8 @@ public class SolrUpgradeTests {
 			}
 		}
 
-		this.postMessage("Port " + port + " looks occupied trying another port number ... ", MessageType.RESULT_ERRROR, true);
+		this.postMessage("Port " + port + " looks occupied trying another port number ... ", MessageType.RESULT_ERRROR,
+				true);
 		return getFreePort();
 	}
 
@@ -347,14 +350,14 @@ public class SolrUpgradeTests {
 				System.out.println(ANSI_BLUE + message + ANSI_RESET);
 			} else if (type.equals(MessageType.PROCESS)) {
 				System.out.println(ANSI_YELLOW + message + ANSI_RESET);
-			} else 	if (type.equals(MessageType.RESULT_ERRROR)) {
+			} else if (type.equals(MessageType.RESULT_ERRROR)) {
 				System.out.println(ANSI_RED + message + ANSI_RESET);
-			} else 	if (type.equals(MessageType.RESULT_SUCCESS)) {
+			} else if (type.equals(MessageType.RESULT_SUCCESS)) {
 				System.out.println(ANSI_GREEN + message + ANSI_RESET);
-			}  
+			}
 
-		} 
-		
+		}
+
 		if (printInLog) {
 			logger.info(message);
 		}
@@ -410,7 +413,7 @@ public class SolrUpgradeTests {
 		}
 	}
 
-	public void unZipDownloadedRelease(String dir, String destinationDir) throws IOException {
+	public void unzipDownloadedRelease(String dir, String destinationDir) throws IOException {
 
 		try {
 
@@ -516,12 +519,12 @@ public class SolrUpgradeTests {
 				File node = new File(entry.getValue());
 				if (!node.exists()) {
 					this.postMessage(CREATING_NDIR, MessageType.ACTION, true);
-					if (action.equals(Action.CREATE)) {	
-											attempt = node.mkdir();
-											this.postMessage("Directory Created: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
+					if (action.equals(Action.CREATE)) {
+						attempt = node.mkdir();
+						this.postMessage("Directory Created: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
 					} else if (action.equals(Action.DELETE)) {
-											attempt = node.delete();	
-											this.postMessage("Directory Deleted: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
+						attempt = node.delete();
+						this.postMessage("Directory Deleted: " + entry.getValue(), MessageType.RESULT_SUCCESS, true);
 					}
 					if (!attempt) {
 						return false;
@@ -660,7 +663,7 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
+
 	public int deleteNodeDirectory(int node, Map<Integer, String> nodes) throws IOException, InterruptedException {
 
 		this.postMessage("Deleting directory for Node : " + node, MessageType.ACTION, true);
@@ -670,9 +673,9 @@ public class SolrUpgradeTests {
 		StreamGobbler outputGobbler = null;
 
 		try {
-			
+
 			proc = rt.exec("rm -r -f " + nodes.get(node));
-			
+
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
 
@@ -699,9 +702,9 @@ public class SolrUpgradeTests {
 		StreamGobbler outputGobbler = null;
 
 		try {
-			
-			proc = rt.exec("rm -r -f /tmp/zookeeper/" );
-			
+
+			proc = rt.exec("rm -r -f /tmp/zookeeper/");
+
 			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
 			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
 
@@ -718,7 +721,7 @@ public class SolrUpgradeTests {
 		}
 
 	}
-	
+
 	public int doActionOnZookeeper(Action action) throws IOException, InterruptedException {
 
 		Runtime rt = Runtime.getRuntime();
@@ -1038,11 +1041,11 @@ public class SolrUpgradeTests {
 		String numNodesI = argM.get(ARG_NUM_NODES);
 		String numShards = argM.get(ARG_NUM_SHARDS);
 		String numReplicas = argM.get(ARG_NUM_REPLICAS);
-		
+
 		if (numShards != null) {
 			NUM_SHARDS = numShards;
 		}
-		
+
 		if (numReplicas != null) {
 			NUM_REPLICAS = numReplicas;
 		}
@@ -1058,7 +1061,7 @@ public class SolrUpgradeTests {
 		for (int i = 1; i <= numNodes; i++) {
 			nodeDirectoryMapping.put(i, BASE_DIR + UUID.randomUUID().toString() + File.separator);
 		}
-		
+
 		if (verbose != null && verbose.equalsIgnoreCase("FALSE")) {
 			isVerbose = false;
 		} else if (verbose != null && verbose.equalsIgnoreCase("TRUE")) {
@@ -1117,7 +1120,8 @@ public class SolrUpgradeTests {
 
 		this.createZookeeperDir();
 
-		if (!this.checkForRelease(ZOOKEEPER_RELEASE, ReleaseType.ZOOKEEPER, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping, -1)) {
+		if (!this.checkForRelease(ZOOKEEPER_RELEASE, ReleaseType.ZOOKEEPER, Location.TEMP, Type.COMPRESSED,
+				nodeDirectoryMapping, -1)) {
 			try {
 				this.downloadRelease(ZOOKEEPER_RELEASE, TEMP_DIR, ReleaseType.ZOOKEEPER);
 				this.extractZookeeperRelease();
@@ -1133,71 +1137,78 @@ public class SolrUpgradeTests {
 			return;
 		}
 
-		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED, nodeDirectoryMapping, -1)) {
-			if (this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping, -1)) {
-				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
+		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED, nodeDirectoryMapping,
+				-1)) {
+			if (this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping,
+					-1)) {
+				this.unzipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
 			}
 		}
 
-		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping, -1)) {
+		if (!this.checkForRelease(versionTwo, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping,
+				-1)) {
 			try {
 				this.downloadRelease(versionTwo, TEMP_DIR, ReleaseType.SOLR);
-				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
+				this.unzipDownloadedRelease(TEMP_DIR + "solr-" + versionTwo + ".zip", TEMP_DIR);
 			} catch (IOException e) {
 				this.postMessage(BAD_RELEASE_NAME, MessageType.RESULT_ERRROR, true);
 				return;
 			}
 		}
 
-		if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED, nodeDirectoryMapping, -1)) {
-			if (this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping, -1)) {
-				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionOne + ".zip", TEMP_DIR);
+		if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.EXTRACTED, nodeDirectoryMapping,
+				-1)) {
+			if (this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping,
+					-1)) {
+				this.unzipDownloadedRelease(TEMP_DIR + "solr-" + versionOne + ".zip", TEMP_DIR);
 			}
 		}
 
-		if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping, -1)) {
+		if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.TEMP, Type.COMPRESSED, nodeDirectoryMapping,
+				-1)) {
 			try {
 				this.downloadRelease(versionOne, TEMP_DIR, ReleaseType.SOLR);
-				this.unZipDownloadedRelease(TEMP_DIR + "solr-" + versionOne + ".zip", TEMP_DIR);
+				this.unzipDownloadedRelease(TEMP_DIR + "solr-" + versionOne + ".zip", TEMP_DIR);
 			} catch (IOException e) {
 				this.postMessage(BAD_RELEASE_NAME, MessageType.RESULT_ERRROR, true);
 				return;
 			}
 		}
 
-		
-		
-		for (int i = 1; i <= numNodes ;i++) {
+		for (int i = 1; i <= numNodes; i++) {
 			nodePortMapping.put(i, String.valueOf(this.getFreePort()));
-		}		
-		
+		}
 
 		for (Map.Entry<Integer, String> entry : nodeDirectoryMapping.entrySet()) {
 
-			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODES, Type.EXTRACTED, nodeDirectoryMapping, entry.getKey())) {
+			if (!this.checkForRelease(versionOne, ReleaseType.SOLR, Location.NODES, Type.EXTRACTED,
+					nodeDirectoryMapping, entry.getKey())) {
 				File node = new File(entry.getValue() + "solr-" + versionOne);
 				node.mkdir();
 				FileUtils.copyDirectory(new File(TEMP_DIR + "solr-" + versionOne), node);
-			}			
-			
+			}
+
 		}
-		
+
 		for (Map.Entry<Integer, String> entry : nodeDirectoryMapping.entrySet()) {
 
-			int srv = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.START, this.zkPort, nodeDirectoryMapping);
-			if(srv != 0) {
-				this.postMessage("Node startup failed for node ... : " + entry.getKey(), MessageType.RESULT_ERRROR, true);
+			int srv = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()),
+					Action.START, this.zkPort, nodeDirectoryMapping);
+			if (srv != 0) {
+				this.postMessage("Node startup failed for node ... : " + entry.getKey(), MessageType.RESULT_ERRROR,
+						true);
 			}
 			Thread.sleep(15000);
-		}		
-		
+		}
+
 		this.createSOLRCollection(1, versionOne, COLLECTION_NAME, NUM_SHARDS, NUM_REPLICAS, nodeDirectoryMapping);
 		this.postData(COLLECTION_NAME, this.zkPort);
-		
+
 		boolean isDataIntact = true;
 		for (Map.Entry<Integer, String> entry : nodeDirectoryMapping.entrySet()) {
-		
-			int hasNodeStopped = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
+
+			int hasNodeStopped = this.doActionOnSolrNode(entry.getKey(), versionOne,
+					nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
 			if (hasNodeStopped != 0) {
 				this.postMessage("Node :" + entry.getKey() + NODES_SHUTDOWN_FAILURE, MessageType.RESULT_ERRROR, true);
 			}
@@ -1205,22 +1216,24 @@ public class SolrUpgradeTests {
 			Thread.sleep(15000);
 
 			this.upgradeSolr(versionOne, versionTwo, entry.getKey(), nodeDirectoryMapping);
-			
-			int hasNodeStarted = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.START, this.zkPort, nodeDirectoryMapping);
+
+			int hasNodeStarted = this.doActionOnSolrNode(entry.getKey(), versionOne,
+					nodePortMapping.get(entry.getKey()), Action.START, this.zkPort, nodeDirectoryMapping);
 			if (hasNodeStarted != 0) {
 				this.postMessage("Node :" + entry.getKey() + NODES_LAUNCH_FAILURE, MessageType.RESULT_ERRROR, true);
 			}
-	
+
 			if (isDataIntact) {
-					isDataIntact = this.verifyData(COLLECTION_NAME, this.zkPort);
-					if (!isDataIntact) {
-						this.postMessage("Data Integrity failed on node : " + entry.getKey(), MessageType.RESULT_ERRROR, true);
-					}
+				isDataIntact = this.verifyData(COLLECTION_NAME, this.zkPort);
+				if (!isDataIntact) {
+					this.postMessage("Data Integrity failed on node : " + entry.getKey(), MessageType.RESULT_ERRROR,
+							true);
+				}
 			}
 			Thread.sleep(15000);
 
-		}		
-		
+		}
+
 		if (this.getLiveNodes() == numNodes) {
 			this.postMessage(ALL_NODES_UP, MessageType.RESULT_SUCCESS, true);
 
@@ -1229,25 +1242,25 @@ public class SolrUpgradeTests {
 			} else {
 				this.postMessage("#### FINAL RESULT #### " + DATA_NOT_OK + " ####", MessageType.RESULT_ERRROR, true);
 			}
-		
+
 		} else {
 			this.postMessage(ALL_NODES_NOT_UP, MessageType.RESULT_ERRROR, true);
 		}
-		
-		
+
 		for (Map.Entry<Integer, String> entry : nodeDirectoryMapping.entrySet()) {
 
-			int isNodeDownProperly = this.doActionOnSolrNode(entry.getKey(), versionOne, nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
+			int isNodeDownProperly = this.doActionOnSolrNode(entry.getKey(), versionOne,
+					nodePortMapping.get(entry.getKey()), Action.STOP, this.zkPort, nodeDirectoryMapping);
 			if (isNodeDownProperly != 0) {
 				this.postMessage("Node: " + entry.getKey() + NODES_SHUTDOWN_FAILURE, MessageType.RESULT_ERRROR, true);
-			}	
+			}
 
 			Thread.sleep(5000);
-			
+
 			this.deleteNodeDirectory(entry.getKey(), nodeDirectoryMapping);
-			
-		}		
-		
+
+		}
+
 		this.doActionOnZookeeper(Action.STOP);
 		this.deleteZookeeperData();
 

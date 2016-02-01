@@ -773,7 +773,7 @@ public class SolrUpgradeTests {
 	public boolean verifyData(String collectionName, String zkPort)
 			throws IOException, InterruptedException, SolrServerException {
 
-		this.postMessage("** Getting the data from nodes ... ", MessageType.ACTION, true);
+		this.postMessage("** Getting the data from nodes ... ", MessageType.RESULT_ERRROR, true);
 		CloudSolrClient solr = null;
 		try {
 

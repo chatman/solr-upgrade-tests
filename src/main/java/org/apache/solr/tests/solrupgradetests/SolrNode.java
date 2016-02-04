@@ -39,7 +39,7 @@ public class SolrNode {
 
 	}
 	
-	
+	 
 
 	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort, String shards, String replicationFactor) throws IOException {
 		super();

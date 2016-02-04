@@ -74,7 +74,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.apache.solr.tests.solrupgradetests.SolrUpgradeTests</mainClass>
+							<mainClass>org.apache.solr.tests.solrupgradetests.SolrRollingUpgradeTests</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

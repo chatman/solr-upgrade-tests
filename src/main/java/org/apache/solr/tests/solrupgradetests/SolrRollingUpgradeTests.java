@@ -1,7 +1,9 @@
 package org.apache.solr.tests.solrupgradetests;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.tests.solrupgradetests.Util.MessageType;
 
 public class SolrRollingUpgradeTests {
@@ -43,15 +45,19 @@ public class SolrRollingUpgradeTests {
 
 	}
 
-	public void test() {
+	public void test() throws IOException, InterruptedException, SolrServerException {
 		
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
+		z.postData("TestCollection");
+		z.verifyData("TestCollection");
+		z.deleteData("TestCollection");
 		z.stop();
+		z.clean();
 		
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException, InterruptedException, SolrServerException {
 
 		SolrRollingUpgradeTests s = new SolrRollingUpgradeTests();
 		s.init();

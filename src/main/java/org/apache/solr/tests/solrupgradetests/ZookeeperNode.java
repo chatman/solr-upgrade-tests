@@ -245,14 +245,14 @@ public class ZookeeperNode {
 
 	}
 
-	public void postData(String collectionName, String zkPort)
+	public void postData(String collectionName)
 			throws IOException, InterruptedException, SolrServerException {
 
 		Util.postMessage("** Posting data to the node ... ", MessageType.ACTION, true);
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zkPort);
+			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			SolrInputDocument document;
@@ -280,14 +280,14 @@ public class ZookeeperNode {
 
 	}
 
-	public boolean verifyData(String collectionName, String zkPort)
+	public boolean verifyData(String collectionName)
 			throws IOException, InterruptedException, SolrServerException {
 
 		Util.postMessage("** Getting the data from nodes ... ", MessageType.RESULT_ERRROR, true);
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zkPort);
+			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			SolrQuery query = new SolrQuery("*:*");
@@ -327,14 +327,14 @@ public class ZookeeperNode {
 
 	}
 
-	public void deleteData(String collectionName, String zkPort)
+	public void deleteData(String collectionName)
 			throws IOException, InterruptedException, SolrServerException {
 
 		Util.postMessage("** Deleting data from the nodes ... ", MessageType.ACTION, true);
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zkPort);
+			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			solr.deleteByQuery("*:*");

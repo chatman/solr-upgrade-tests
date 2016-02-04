@@ -281,7 +281,7 @@ public class SolrNode {
 			if (ds != null) {
 				ds.close();
 			}
-
+ 
 			if (ss != null) {
 				try {
 					ss.close();

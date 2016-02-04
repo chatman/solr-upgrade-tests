@@ -53,7 +53,7 @@ public class SolrRollingUpgradeTests {
 		z.verifyData("TestCollection");
 		z.deleteData("TestCollection");
 		z.stop();
-		z.clean();
+		z.clean(); 
 		
 	}
 	

@@ -377,6 +377,6 @@ public class ZookeeperNode {
 
 	public void setStopped(boolean stopped) {
 		this.stopped = stopped;
-	}	
+	}	 
 
 }

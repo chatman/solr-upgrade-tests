@@ -49,6 +49,15 @@ public class SolrRollingUpgradeTests {
 		
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
+		SolrNode s1 = new SolrNode();
+		SolrNode s2 = new SolrNode();
+		SolrNode s3 = new SolrNode();
+		
+		s1.start();
+		s2.start();
+		s3.start();
+		s1.createCollection("TestCollection");
+		
 		z.postData("TestCollection");
 		z.verifyData("TestCollection");
 		z.deleteData("TestCollection");

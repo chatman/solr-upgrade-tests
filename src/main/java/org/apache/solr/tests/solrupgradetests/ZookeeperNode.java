@@ -348,6 +348,27 @@ public class ZookeeperNode {
 
 		}
 	}
+	
+	public int getLiveNodes() throws IOException {
+
+		Util.postMessage("** Attempting to get live nodes on the cluster ... ", MessageType.ACTION, true);
+		CloudSolrClient solr = null;
+		try {
+			solr = new CloudSolrClient(zookeeperIp + ":" + zookeeperPort);
+			solr.connect();
+			int liveNodes = solr.getZkStateReader().getClusterState().getLiveNodes().size();
+			solr.close();
+			return liveNodes;
+
+		} catch (Exception e) {
+
+			Util.postMessage(e.getMessage(), MessageType.RESULT_ERRROR, true);
+			return -1;
+
+		}
+
+	}
+
 
 	public String getZookeeperIp() {
 		return zookeeperIp;

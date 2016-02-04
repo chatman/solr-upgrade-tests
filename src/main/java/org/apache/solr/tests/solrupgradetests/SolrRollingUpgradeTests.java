@@ -2,6 +2,11 @@ package org.apache.solr.tests.solrupgradetests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.tests.solrupgradetests.Util.MessageType;
@@ -13,11 +18,17 @@ public class SolrRollingUpgradeTests {
 	public static String BASE_DIR = WORK_DIRECTORY + File.separator + DNAME + File.separator;
 	public static String TEMP_DIR = BASE_DIR + "temp" + File.separator;
 
+	public String ARG_VERSION_ONE = "-v1";
+	public String ARG_VERSION_TWO = "-v2";
+	public String ARG_NUM_SHARDS = "-Shards";
+	public String ARG_NUM_REPLICAS = "-Replicas";
+	public String ARG_NUM_NODES = "-Nodes";
+
 	public static void main(String args[]) throws IOException, InterruptedException, SolrServerException {
 
 		SolrRollingUpgradeTests s = new SolrRollingUpgradeTests();
 		s.init();
-		s.test();
+		s.test(args);
 
 	}
 
@@ -44,33 +55,65 @@ public class SolrRollingUpgradeTests {
 
 	}
 
-	public void test() throws IOException, InterruptedException, SolrServerException {
+	public void test(String args[]) throws IOException, InterruptedException, SolrServerException {
+
+		Map<String, String> argM = new HashMap<String, String>();
+
+		for (int i = 0; i < args.length; i += 2) {
+			argM.put(args[i], args[i + 1]);
+		}
+		
+		String versionOne = argM.get(ARG_VERSION_ONE);
+		String versionTwo = argM.get(ARG_VERSION_TWO);
+		String numNodes = argM.get(ARG_NUM_NODES);
+		String numShards = argM.get(ARG_NUM_SHARDS);
+		String numReplicas = argM.get(ARG_NUM_REPLICAS);
+		
+		List<SolrNode> nodes = new ArrayList<SolrNode>();
+		boolean collectionCreated = false;
+		int nodesCount = Integer.parseInt(numNodes);
+		String collectionName = UUID.randomUUID().toString();
 
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
-		SolrNode s1 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
-		SolrNode s2 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
-		SolrNode s3 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
+		
+		for(int i = 1; i < nodesCount ; i++) {
 
-		s1.start();
-		s2.start();
-		s3.start();
-		s1.createCollection("TestCollection","2","3");
+			SolrNode node = new SolrNode(versionOne, z.getZookeeperIp(), z.getZookeeperPort());
+			nodes.add(node);
+			node.start();
+			
+			if (!collectionCreated) {
+				node.createCollection(collectionName, numShards, numReplicas);
+			}
+			
+		}
+		
+		z.postData(collectionName);
+		
+		for (SolrNode node : nodes) {
+			
+			node.stop();
+			node.upgrade(versionTwo);
+			node.start();			
+			if (!z.verifyData(collectionName)) {
+				Util.postMessage("Inconsistencies found in data !", MessageType.RESULT_ERRROR, true);
+			}
+		}
+		
+		if (z.getLiveNodes() != nodesCount) {
+			Util.postMessage("All the nodes didnt come up !", MessageType.RESULT_ERRROR, true);
+		}
+		
+		for (SolrNode node : nodes) {
 
-		z.postData("TestCollection");
-		z.verifyData("TestCollection");
-		z.deleteData("TestCollection");
+			node.stop();
+			Util.deleteDirectory(node.getNodeDirectory());
+			
+		}
 
-		s1.stop();
-		s2.stop();
-		s3.stop();
-
+		z.verifyData(collectionName);
 		z.stop();
 		z.clean();
-
-		Util.deleteDirectory(s1.getNodeDirectory());
-		Util.deleteDirectory(s1.getNodeDirectory());
-		Util.deleteDirectory(s3.getNodeDirectory());
 	}
-
 }

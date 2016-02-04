@@ -303,4 +303,8 @@ public class SolrNode {
 		return getFreePort();
 	}
 
+	public String getNodeDirectory() {
+		return nodeDirectory;
+	}
+
 }

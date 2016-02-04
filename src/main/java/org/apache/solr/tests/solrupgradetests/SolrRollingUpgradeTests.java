@@ -62,9 +62,17 @@ public class SolrRollingUpgradeTests {
 		z.postData("TestCollection");
 		z.verifyData("TestCollection");
 		z.deleteData("TestCollection");
+		
+		s1.stop();
+		s2.stop();
+		s3.stop();
+		
 		z.stop();
 		z.clean(); 
 		
+		Util.deleteDirectory(s1.getNodeDirectory());
+		Util.deleteDirectory(s1.getNodeDirectory());
+		Util.deleteDirectory(s3.getNodeDirectory());
 	}
 	
 	public static void main(String args[]) throws IOException, InterruptedException, SolrServerException {

@@ -77,7 +77,7 @@ public class Util {
 
 	}
 
-	public int deleteDirectory(String directory) throws IOException, InterruptedException {
+	public static int deleteDirectory(String directory) throws IOException, InterruptedException {
 
 		postMessage("Deleting directory: " + directory, MessageType.ACTION, true);
 		Runtime rt = Runtime.getRuntime();

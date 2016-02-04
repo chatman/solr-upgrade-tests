@@ -85,6 +85,7 @@ public class SolrRollingUpgradeTests {
 			
 			if (!collectionCreated) {
 				node.createCollection(collectionName, numShards, numReplicas);
+				collectionCreated = true;
 			}
 			
 		}
@@ -112,7 +113,6 @@ public class SolrRollingUpgradeTests {
 			
 		}
 
-		z.verifyData(collectionName);
 		z.stop();
 		z.clean();
 	}

@@ -29,7 +29,7 @@ public class ZookeeperNode {
 
 	public String ZOO_URL_BASE = "http://www.us.apache.org/dist/zookeeper/";
 	public String ZOOKEEPER_RELEASE = "3.4.6";
-	public String ZOOKEEPER_DIR = SolrRollingUpgradeTests.BASE_DIR + File.separator + "zookeeper-" + ZOOKEEPER_RELEASE;
+	public String ZOOKEEPER_DIR = SolrRollingUpgradeTests.BASE_DIR + "ZOOKEEPER" + File.separator;
 	public int TEST_DOCUMENTS_COUNT = 1000;
 
 	private String zookeeperIp = "127.0.0.1";

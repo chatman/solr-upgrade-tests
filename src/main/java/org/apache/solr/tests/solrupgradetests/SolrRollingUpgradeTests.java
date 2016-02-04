@@ -49,9 +49,9 @@ public class SolrRollingUpgradeTests {
 		
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
-		SolrNode s1 = new SolrNode();
-		SolrNode s2 = new SolrNode();
-		SolrNode s3 = new SolrNode();
+		SolrNode s1 = new SolrNode("5.4.0","127.0.0.1","2181","2","3");
+		SolrNode s2 = new SolrNode("5.4.0","127.0.0.1","2181","2","3");
+		SolrNode s3 = new SolrNode("5.4.0","127.0.0.1","2181","2","3");
 		
 		s1.start();
 		s2.start();

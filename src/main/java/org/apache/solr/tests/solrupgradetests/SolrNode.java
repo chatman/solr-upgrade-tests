@@ -38,15 +38,23 @@ public class SolrNode {
 				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
 
 	}
+	
+	
 
-	public SolrNode() throws IOException {
+	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort, String shards, String replicationFactor) throws IOException {
 		super();
+		this.version = version;
+		this.zooKeeperIp = zooKeeperIp;
+		this.zooKeeperPort = zooKeeperPort;
+		this.shards = shards;
+		this.replicationFactor = replicationFactor;
+		
 		this.install();
 	}
 
 	private void install() throws IOException {
 
-		this.nodeDirectory = SolrRollingUpgradeTests.BASE_DIR + File.separator + UUID.randomUUID().toString()
+		this.nodeDirectory = SolrRollingUpgradeTests.BASE_DIR + UUID.randomUUID().toString()
 				+ File.separator;
 		this.port = String.valueOf(getFreePort());
 
@@ -80,7 +88,7 @@ public class SolrNode {
 			try {
 
 				fileName = "solr-" + version + ".zip";
-				String url = URL_BASE + File.separator + version + File.separator + fileName;
+				String url = URL_BASE + version + File.separator + fileName;
 				Util.postMessage("** Attempting to download release ..." + " " + version + " from " + url,
 						MessageType.ACTION, true);
 				link = new URL(url);

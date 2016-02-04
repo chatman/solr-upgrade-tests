@@ -48,14 +48,14 @@ public class SolrRollingUpgradeTests {
 
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
-		SolrNode s1 = new SolrNode("5.4.0", "127.0.0.1", "2181", "2", "3");
-		SolrNode s2 = new SolrNode("5.4.0", "127.0.0.1", "2181", "2", "3");
-		SolrNode s3 = new SolrNode("5.4.0", "127.0.0.1", "2181", "2", "3");
+		SolrNode s1 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
+		SolrNode s2 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
+		SolrNode s3 = new SolrNode("5.4.0", z.getZookeeperIp(), z.getZookeeperPort());
 
 		s1.start();
 		s2.start();
 		s3.start();
-		s1.createCollection("TestCollection");
+		s1.createCollection("TestCollection","2","3");
 
 		z.postData("TestCollection");
 		z.verifyData("TestCollection");

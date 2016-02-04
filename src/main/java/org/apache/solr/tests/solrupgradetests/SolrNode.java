@@ -29,8 +29,6 @@ public class SolrNode {
 	private static String solrCommand;
 	private String zooKeeperIp;
 	private String zooKeeperPort;
-	private String shards;
-	private String replicationFactor;
 
 	static {
 
@@ -39,15 +37,11 @@ public class SolrNode {
 
 	}
 
-	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort, String shards, String replicationFactor)
-			throws IOException {
+	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort) throws IOException {
 		super();
 		this.version = version;
 		this.zooKeeperIp = zooKeeperIp;
 		this.zooKeeperPort = zooKeeperPort;
-		this.shards = shards;
-		this.replicationFactor = replicationFactor;
-
 		this.install();
 	}
 
@@ -216,7 +210,7 @@ public class SolrNode {
 
 	}
 
-	public int createCollection(String collectionName) throws IOException, InterruptedException {
+	public int createCollection(String collectionName, String shards, String replicationFactor) throws IOException, InterruptedException {
 
 		Util.postMessage("** Creating collection, configuring shards and replication factor ... ", MessageType.ACTION,
 				true);

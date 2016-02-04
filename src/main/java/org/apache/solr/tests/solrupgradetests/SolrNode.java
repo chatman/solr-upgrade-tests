@@ -38,24 +38,24 @@ public class SolrNode {
 				? "bin" + File.separator + "solr.cmd" : "bin" + File.separator + "solr";
 
 	}
-	
-	 
 
-	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort, String shards, String replicationFactor) throws IOException {
+	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort, String shards, String replicationFactor)
+			throws IOException {
 		super();
 		this.version = version;
 		this.zooKeeperIp = zooKeeperIp;
 		this.zooKeeperPort = zooKeeperPort;
 		this.shards = shards;
 		this.replicationFactor = replicationFactor;
-		
+
 		this.install();
 	}
 
 	private void install() throws IOException {
+		
+		Util.postMessage("** Installing Solr Node ...", MessageType.ACTION, true);
 
-		this.nodeDirectory = SolrRollingUpgradeTests.BASE_DIR + UUID.randomUUID().toString()
-				+ File.separator;
+		this.nodeDirectory = SolrRollingUpgradeTests.BASE_DIR + UUID.randomUUID().toString() + File.separator;
 		this.port = String.valueOf(getFreePort());
 
 		try {
@@ -146,14 +146,15 @@ public class SolrNode {
 			}
 
 		}
-		
+
 		File node = new File(nodeDirectory + "solr-" + version);
-		node.mkdir();	
+		node.mkdir();
 		FileUtils.copyDirectory(new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version), node);
 	}
 
-
 	public int start() {
+		
+		Util.postMessage("** Starting Solr Node ...", MessageType.ACTION, true);
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -184,6 +185,8 @@ public class SolrNode {
 	}
 
 	public int stop() {
+		
+		Util.postMessage("** Stopping Solr Node ...", MessageType.ACTION, true);
 
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
@@ -289,7 +292,7 @@ public class SolrNode {
 			if (ds != null) {
 				ds.close();
 			}
- 
+
 			if (ss != null) {
 				try {
 					ss.close();

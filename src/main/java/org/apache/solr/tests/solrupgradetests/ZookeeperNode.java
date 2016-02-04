@@ -38,6 +38,8 @@ public class ZookeeperNode {
 	private boolean stopped = false;
 
 	public void install() throws IOException {
+		
+		Util.postMessage("** Installing Zookeeper Node ...", MessageType.ACTION, true);
 
 		File base = new File(ZOOKEEPER_DIR);
 		if (!base.exists()) {
@@ -145,7 +147,7 @@ public class ZookeeperNode {
 	}
 
 	public void start() {
-
+		
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
 		StreamGobbler errorGobbler = null;

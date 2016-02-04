@@ -77,26 +77,36 @@ public class SolrRollingUpgradeTests {
 		ZookeeperNode z = new ZookeeperNode();
 		z.start();
 		
-		for(int i = 1; i < nodesCount ; i++) {
+		for(int i = 1; i <= nodesCount ; i++) {
 
 			SolrNode node = new SolrNode(versionOne, z.getZookeeperIp(), z.getZookeeperPort());
+			Thread.sleep(10000);
 			nodes.add(node);
 			node.start();
-			
+			Thread.sleep(10000);
+
 			if (!collectionCreated) {
 				node.createCollection(collectionName, numShards, numReplicas);
 				collectionCreated = true;
+				Thread.sleep(10000);
 			}
 			
 		}
 		
+		Thread.sleep(10000);
+
 		z.postData(collectionName);
+
+		Thread.sleep(10000);
 		
 		for (SolrNode node : nodes) {
 			
 			node.stop();
+			Thread.sleep(10000);
 			node.upgrade(versionTwo);
-			node.start();			
+			Thread.sleep(10000);
+			node.start();	
+			Thread.sleep(10000);
 			if (!z.verifyData(collectionName)) {
 				Util.postMessage("Inconsistencies found in data !", MessageType.RESULT_ERRROR, true);
 			}
@@ -109,11 +119,14 @@ public class SolrRollingUpgradeTests {
 		for (SolrNode node : nodes) {
 
 			node.stop();
+			Thread.sleep(10000);
+
 			Util.deleteDirectory(node.getNodeDirectory());
 			
 		}
 
 		z.stop();
+		Thread.sleep(10000);
 		z.clean();
 	}
 }

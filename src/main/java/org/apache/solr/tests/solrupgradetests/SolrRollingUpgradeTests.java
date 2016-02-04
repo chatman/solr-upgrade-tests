@@ -57,7 +57,8 @@ public class SolrRollingUpgradeTests {
 		s2.start();
 		s3.start();
 		s1.createCollection("TestCollection");
-		 
+		
+		
 		z.postData("TestCollection");
 		z.verifyData("TestCollection");
 		z.deleteData("TestCollection");

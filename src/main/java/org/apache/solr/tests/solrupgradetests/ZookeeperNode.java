@@ -252,7 +252,7 @@ public class ZookeeperNode {
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
+			solr = new CloudSolrClient(zookeeperIp + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			SolrInputDocument document;
@@ -287,7 +287,7 @@ public class ZookeeperNode {
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
+			solr = new CloudSolrClient(zookeeperIp + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			SolrQuery query = new SolrQuery("*:*");
@@ -334,7 +334,7 @@ public class ZookeeperNode {
 		CloudSolrClient solr = null;
 		try {
 
-			solr = new CloudSolrClient(zookeeperPort + ":" + zookeeperPort);
+			solr = new CloudSolrClient(zookeeperIp + ":" + zookeeperPort);
 			solr.connect();
 			solr.setDefaultCollection(collectionName);
 			solr.deleteByQuery("*:*");

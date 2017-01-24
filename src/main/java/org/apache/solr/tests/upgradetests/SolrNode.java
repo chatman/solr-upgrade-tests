@@ -175,12 +175,10 @@ public class SolrNode {
 		String tarballLocation = SolrRollingUpgradeTests.TEMP_DIR+"solr-"+commit+".zip";
 
 		if (new File(tarballLocation).exists() == false) {
-			if (new File(packageFilename).exists() == false) {
-				Util.postMessage("** There were new changes, need to rebuild ...", MessageType.ACTION, true);
-				Util.execute("ant ivy-bootstrap", gitDirectoryPath);
-				//Util.execute("ant compile", gitDirectoryPath);
-				Util.execute("ant package", gitDirectoryPath + File.separator + "solr");
-			}
+			Util.postMessage("** There were new changes, need to rebuild ...", MessageType.ACTION, true);
+			Util.execute("ant ivy-bootstrap", gitDirectoryPath);
+			Util.execute("ant clean compile", gitDirectoryPath);
+			Util.execute("ant package", gitDirectoryPath + File.separator + "solr");
 
 			if (new File(packageFilename).exists()) {
 				System.out.println("Trying to copy: "+packageFilename + " to "+tarballLocation);

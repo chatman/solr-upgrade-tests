@@ -82,9 +82,12 @@ public class SimpleBenchmarks {
 		int queueSize = Integer.parseInt(argM.get("-queueSize"));
 		int thread = Integer.parseInt(argM.get("-threads"));
 
+		boolean onlyRegularUpdates = argM.containsKey("-onlyRegularUpdates")? 
+			Boolean.parseBoolean(argM.get("-onlyRegularUpdates")): false;
+		
 		Zookeeper zookeeper = new Zookeeper();
 		SolrClient client = new SolrClient(1000, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort(),
-				numDocs, iterations, updates, queueSize, thread);
+				numDocs, iterations, updates, queueSize, thread, onlyRegularUpdates);
 		zookeeper.start();
 
 		List<SolrNode> nodes = new LinkedList<SolrNode>();

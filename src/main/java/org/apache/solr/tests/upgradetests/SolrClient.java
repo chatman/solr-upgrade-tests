@@ -28,10 +28,11 @@ public class SolrClient {
 
 	public SolrClient(int testDocumentsCount, String zookeeperIp, String zookeeperPort) {
 		this(testDocumentsCount, zookeeperIp, zookeeperPort, 
-				20000, 10, 5000, 5000, 4);
+				20000, 10, 5000, 5000, 4, false);
 	}
 	public SolrClient(int testDocumentsCount, String zookeeperIp, String zookeeperPort, 
-			int numDocs, int iterations, int updates, int queueSize, int threads) {
+			int numDocs, int iterations, int updates, int queueSize, int threads, 
+			boolean onlyRegularUpdates) {
 		super();
 		this.testDocumentsCount = testDocumentsCount;
 		this.zookeeperIp = zookeeperIp;
@@ -43,6 +44,7 @@ public class SolrClient {
 		this.updates = updates;
 		this.queueSize = queueSize;
 		this.threads = threads;
+		this.onlyRegularUpdates = onlyRegularUpdates;
 	}
 
 	public void postData(String collectionName) throws IOException, InterruptedException, SolrServerException {
@@ -79,6 +81,7 @@ public class SolrClient {
 	private final int updates;
 	private final int threads;
 	private final int queueSize;
+	private final boolean onlyRegularUpdates;
 
 	public void benchmark(String collectionName, List<SolrNode> nodes) throws SolrServerException, IOException, InterruptedException {
 		Random r = new Random(0); // fixed seed, so that benchmarks are reproducible easily
@@ -87,6 +90,14 @@ public class SolrClient {
 		
 		ConcurrentUpdateSolrClient cusc = new ConcurrentUpdateSolrClient(nodes.get(0).getBaseUrl()+"/" + collectionName, queueSize, threads);
 		client = cusc;
+		
+		List<String> fields;
+		
+		if (onlyRegularUpdates) {
+			fields = Arrays.asList("stored_l");
+		} else {
+			fields = Arrays.asList("stored_l", "inplace_dvo_l");
+		}
 
 		long start = System.nanoTime();
 		List<SolrInputDocument> batch = new ArrayList<>();
@@ -113,7 +124,7 @@ public class SolrClient {
 		times.put("stored_l", 0l);
 		times.put("inplace_dvo_l", 0l);
 		for (int iter=0; iter<iterations; iter++) {
-			for (String field: Arrays.asList("stored_l", "inplace_dvo_l")) {
+			for (String field: fields) {
 				start = System.nanoTime();
 				batch = new ArrayList<>();
 				for (int i=1; i<=updates; i++) {
@@ -137,7 +148,7 @@ public class SolrClient {
 			}
 		}
 		
-		for (String field: Arrays.asList("stored_l", "inplace_dvo_l")) {
+		for (String field: fields) {
 			Util.postMessage("Time for "+field+": " + (times.get(field))/1000000000 + " secs", MessageType.RESULT_SUCCESS, true);
 		}
 		

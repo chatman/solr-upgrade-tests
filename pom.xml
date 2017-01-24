@@ -4,6 +4,10 @@
 	<groupId>0.0.1</groupId>
 	<artifactId>org.apache.solr.tests.upgradetests</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+	    <maven.compiler.source>1.8</maven.compiler.source>
+	    <maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -14,7 +18,7 @@
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
-			<version>5.4.1</version>
+			<version>6.3.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.mortbay</groupId>
@@ -85,7 +89,7 @@
 		<dependency>
 			    <groupId>org.apache.lucene</groupId>
 			        <artifactId>lucene-test-framework</artifactId>
-				    <version>5.4.1</version>
+				    <version>6.3.0</version>
 			    </dependency>
 
 

@@ -282,7 +282,7 @@ public class SolrClient {
 			});
 		}
 		executor.shutdown();
-		executor.awaitTermination(60, TimeUnit.SECONDS);
+		executor.awaitTermination(600, TimeUnit.SECONDS);
 
 		System.out.println("Got results for prefix queries: "+prefixQueryTimes.size());
 		System.out.println("Max time (prefix queries): "+Collections.max(prefixQueryTimes));

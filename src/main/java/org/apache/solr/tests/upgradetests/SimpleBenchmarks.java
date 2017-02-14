@@ -84,6 +84,8 @@ public class SimpleBenchmarks {
 
 		boolean onlyRegularUpdates = argM.containsKey("-onlyRegularUpdates")? 
 			Boolean.parseBoolean(argM.get("-onlyRegularUpdates")): false;
+			
+		String benchmarkType = argM.containsKey("-benchmarkType")? argM.get("-benchmarkType"): "inplace";
 		
 		Zookeeper zookeeper = new Zookeeper();
 		SolrClient client = new SolrClient(1000, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort(),
@@ -115,7 +117,14 @@ public class SimpleBenchmarks {
 			/*client.postData(collectionName);
 			boolean pass = client.verifyData(collectionName);*/
 			
-			client.benchmark(collectionName, nodes);
+			if (benchmarkType.equals("inplace")) {
+				client.benchmarkInPlaceUpdates(collectionName, nodes);
+			} else if (benchmarkType.equalsIgnoreCase("generalIndexing")) {
+				client.benchmarkGeneralIndexing(collectionName, nodes);
+			} else {
+				throw new Exception("Benchmark type not supported: " + benchmarkType);
+			}
+
 			boolean pass = true;
 			
 			if (!pass) {

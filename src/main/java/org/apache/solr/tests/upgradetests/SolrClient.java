@@ -3,18 +3,37 @@ package org.apache.solr.tests.upgradetests;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.collections.set.ListOrderedSet;
+import org.apache.lucene.util.TestUtil;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.ConcurrentUpdateSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.ModifiableSolrParams;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -218,7 +237,8 @@ public class SolrClient {
 			SolrInputDocument doc = new SolrInputDocument();
 			doc.addField("id", i);
 			doc.addField("stored_l", r.nextLong());
-			doc.addField("text", Util.getSentence(r, 1000));
+			String sentence = Util.getSentence(r, 1000);
+			doc.addField("text", sentence);
 			client.add(doc);
 			if (i % 10000 == 0) {
 				System.out.println(i + ": "+doc);
@@ -232,6 +252,41 @@ public class SolrClient {
 		batch.clear();
 		
 		cusc.close();
+	}
+	
+	public void benchmarkGeneralQuerying(String collectionName, List<SolrNode> nodes) throws SolrServerException, IOException, InterruptedException {
+		benchmarkGeneralIndexing(collectionName, nodes);
+		
+		final HttpSolrClient hsc = new HttpSolrClient(nodes.get(0).getBaseUrl()+"/" + collectionName);
+		
+		ConcurrentLinkedDeque<Integer> prefixQueryTimes = new ConcurrentLinkedDeque<>();
+		AtomicInteger prefixQueryTime = new AtomicInteger();
+		
+		Random r = new Random();
+		ExecutorService executor = Executors.newFixedThreadPool(threads*4); // 4 times as many query threads as indexing threads
+		for (int i=0; i<numDocs; i++) {
+            executor.execute(new Runnable() {
+				public void run() {
+					ModifiableSolrParams params = new ModifiableSolrParams();
+					String randomWord = "";
+					while (randomWord.length()==0) {
+						randomWord = TestUtil.randomSimpleString(r, 3);
+					}
+					params.add("q", "text:" + randomWord + "*");
+					try {
+						int qtime = Integer.parseInt(hsc.query(params).getHeader().get("QTime").toString());
+						prefixQueryTimes.add(qtime);
+						prefixQueryTime.addAndGet(qtime);
+					} catch (SolrServerException | IOException e) {	}
+				}
+			});
+		}
+		executor.shutdown();
+		executor.awaitTermination(60, TimeUnit.SECONDS);
+
+		System.out.println("Got results for prefix queries: "+prefixQueryTimes.size());
+		System.out.println("Max time (prefix queries): "+Collections.max(prefixQueryTimes));
+		System.out.println("Total time (prefix queries): "+prefixQueryTime);
 	}
 
 	public void deleteData(String collectionName) throws IOException, InterruptedException, SolrServerException {

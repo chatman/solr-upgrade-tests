@@ -123,6 +123,8 @@ public class SimpleBenchmarks {
 				client.benchmarkInPlaceUpdates(collectionName, nodes);
 			} else if (benchmarkType.equalsIgnoreCase("generalIndexing")) {
 				client.benchmarkGeneralIndexing(collectionName, nodes);
+			} else if (benchmarkType.equals("generalQuerying")) {
+				client.benchmarkGeneralQuerying(collectionName, nodes);
 			} else {
 				throw new Exception("Benchmark type not supported: " + benchmarkType);
 			}

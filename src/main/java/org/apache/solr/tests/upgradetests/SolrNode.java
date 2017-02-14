@@ -3,6 +3,7 @@ package org.apache.solr.tests.upgradetests;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.ZipEntry;
@@ -92,9 +94,11 @@ public class SolrNode {
 
 		File uzrelease = new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version);
 		if (!uzrelease.exists()) {
+			String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");
+
 			Util.extract(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + ".zip", SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version);
 			
-			for (File file: new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version+"/solr-7.0.0-SNAPSHOT").listFiles()) {
+			for (File file: new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version+"/solr-"+baseVersion).listFiles()) {
 				String src = file.getAbsolutePath();
 				String dest = SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version;
 				System.out.println("Moving "+src+ " to "+dest);
@@ -110,9 +114,13 @@ public class SolrNode {
 		File node = new File(nodeDirectory + "solr-" + version);
 		node.mkdir();
 		FileUtils.copyDirectory(new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version), node);
-
 	}
 
+	String getBaseVersion(String versionFile) throws FileNotFoundException, IOException {
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File(versionFile)));
+		return prop.getProperty("version.base") + "-" + prop.getProperty("version.suffix");
+	}
 	void download(String version) {
 		String fileName = null;
 		URL link = null;
@@ -171,7 +179,8 @@ public class SolrNode {
 			.call();
 		}
 
-		String packageFilename = gitDirectoryPath + "/solr/package/solr-7.0.0-SNAPSHOT.zip";
+		String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");
+		String packageFilename = gitDirectoryPath + "/solr/package/solr-"+baseVersion+".zip";
 		String tarballLocation = SolrRollingUpgradeTests.TEMP_DIR+"solr-"+commit+".zip";
 
 		if (new File(tarballLocation).exists() == false) {
@@ -229,76 +238,6 @@ public class SolrNode {
 
 		}
 
-	}
-
-	void checkoutBranchAndBuild (String branch) throws IOException, GitAPIException {
-		Util.postMessage("** Checking out Solr ...", MessageType.ACTION, true);
-
-		File gitDirectory = new File(gitDirectoryPath);
-
-		Git repository;
-
-		boolean newCode = false;
-		if (gitDirectory.exists()) {
-			repository = Git.open(gitDirectory);
-
-			boolean branchExists = false;
-
-			if (repository.getRepository().getBranch().equals(branch)) {
-				branchExists = true;
-			} else {
-				for (Ref ref: repository.branchList().call()) {
-					if (ref.getName().equals("refs/heads/" + branch)) {
-						branchExists = true;
-						break;
-					}
-				}
-				newCode = true; // we need to switch branches
-			}
-
-			if (branchExists) {
-				Util.postMessage("** git branch already exists, switching to it ...", MessageType.ACTION, true);
-				repository.checkout()
-				.setName(branch)
-				.call();
-
-				Util.postMessage("** git pull ...", MessageType.ACTION, true);
-				PullResult pullResult = repository.pull().call();
-				if (pullResult.getFetchResult().getTrackingRefUpdates().isEmpty() == false) {
-					newCode = true;
-				}
-			} else {
-				newCode = true; // branch didn't exist before
-				Util.postMessage("** git branch didn't exist before, checking out ...", MessageType.ACTION, true);
-				repository.checkout()
-				.setCreateBranch(true)
-				.setName(branch)
-				.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
-				.setStartPoint("origin/" + branch)
-				.call();
-
-				Util.postMessage("** git pull ...", MessageType.ACTION, true);
-				PullResult pullResult = repository.pull().call();
-
-			}
-		} else {
-			repository = Git.cloneRepository()
-					.setURI("https://github.com/apache/lucene-solr")
-					.setDirectory(gitDirectory)
-					.setBranch(branch)
-					.call();
-			newCode = true;
-		}
-
-		String packageFilename = gitDirectoryPath + "/solr/package/solr-7.0.0-SNAPSHOT.tgz";
-		if (newCode || new File(packageFilename).exists() == false) {
-			Util.postMessage("** There were new changes, need to rebuild ...", MessageType.ACTION, true);
-			Util.execute("ant ivy-bootstrap", gitDirectoryPath);
-			//Util.execute("ant compile", gitDirectoryPath);
-			Util.execute("ant package", gitDirectoryPath + File.separator + "solr");
-		}
-
-		Util.postMessage("** Do we have packageFilename? "+(new File(packageFilename).exists()? "yes": "no")+" ...", MessageType.ACTION, true);
 	}
 
 	@SuppressWarnings("finally")

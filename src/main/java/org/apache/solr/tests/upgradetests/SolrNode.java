@@ -30,7 +30,9 @@ import org.eclipse.jgit.api.ApplyResult;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.PatchApplyException;
 import org.eclipse.jgit.lib.Ref;
 
 public class SolrNode {
@@ -189,8 +191,22 @@ public class SolrNode {
 		if (patchUrl != null) {
 			InputStream in = new URL(patchUrl).openStream();
 			String patch = IOUtils.toString(in, StandardCharsets.UTF_8);
-			ApplyResult apply = repository.apply().setPatch(new ByteArrayInputStream(patch.getBytes(StandardCharsets.UTF_8))).call();
-			System.out.println("Patch applied? " + apply);
+			
+			try {
+				ApplyResult apply = repository.apply().setPatch(new ByteArrayInputStream(patch.getBytes(StandardCharsets.UTF_8))).call();
+				System.out.println("Patch applied? " + apply);
+			} catch (PatchApplyException ex) {
+				ex.printStackTrace();
+				String patchFile = "/tmp/"+Util.md5(patchUrl)+".patch";
+				FileUtils.write(new File(patchFile), patch);
+				int status = Util.execute("git apply " + patchFile, gitDirectoryPath);
+				System.out.println("Patch applied? Status="+status);
+				Status statusResult = repository.status().call();
+				System.out.println("Has changes? "+statusResult.hasUncommittedChanges());
+				if (statusResult.hasUncommittedChanges()==false) {
+					throw new IOException("Patch couldn't be applied. Status now: "+statusResult);
+				}
+			}
 		}
 
 		String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");

@@ -95,7 +95,7 @@ public class SolrRollingUpgradeTests {
 		SolrNode node;
 		for (int i = 1; i <= nodesCount ; i++) {
 
-			node = new SolrNode(versionOne, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort());
+			node = new SolrNode(versionOne, null, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort());
 			node.start();
 			Thread.sleep(1000);
 			nodes.add(node);

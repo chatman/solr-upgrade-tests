@@ -1,15 +1,18 @@
 package org.apache.solr.tests.upgradetests;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +24,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.ApplyResult;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
@@ -36,6 +41,7 @@ public class SolrNode {
 	private String nodeDirectory;
 	private String port;
 	private String version;
+	private String patchUrl;
 	private static String solrCommand;
 	private String zooKeeperIp;
 	private String zooKeeperPort;
@@ -49,11 +55,12 @@ public class SolrNode {
 
 	private String gitDirectoryPath = SolrRollingUpgradeTests.TEMP_DIR + "git-repository";
 
-	public SolrNode(String version, String zooKeeperIp, String zooKeeperPort) throws IOException, GitAPIException {
+	public SolrNode(String version, String patchUrl, String zooKeeperIp, String zooKeeperPort) throws IOException, GitAPIException {
 		super();
 		this.version = version;
 		this.zooKeeperIp = zooKeeperIp;
 		this.zooKeeperPort = zooKeeperPort;
+		this.patchUrl = patchUrl;
 		this.install();
 	}
 
@@ -65,22 +72,16 @@ public class SolrNode {
 		this.port = String.valueOf(getFreePort());
 
 		try {
-
 			Util.postMessage("** Checking if SOLR node directory exists ...", MessageType.ACTION, true);
 			File node = new File(nodeDirectory);
 
 			if (!node.exists()) {
-
 				Util.postMessage("Node directory does not exist, creating it ...", MessageType.ACTION, true);
 				node.mkdir();
 				Util.postMessage("Directory Created: " + nodeDirectory, MessageType.RESULT_SUCCESS, true);
-
 			}
-
 		} catch (Exception e) {
-
 			Util.postMessage(e.getMessage(), MessageType.RESULT_ERRROR, true);
-
 		}
 
 		File release = new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + ".zip");
@@ -92,17 +93,21 @@ public class SolrNode {
 			}
 		}
 
-		File uzrelease = new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version);
-		if (!uzrelease.exists()) {
-			String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");
+		String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");
+		String zipFile = (patchUrl==null) ? SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + ".zip":
+			SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + "-" + Util.md5(patchUrl) + ".zip";
+		String extractedDir = (patchUrl==null) ? SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version:
+			SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + "-" + Util.md5(patchUrl);
 
-			Util.extract(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version + ".zip", SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version);
-			
-			for (File file: new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version+"/solr-"+baseVersion).listFiles()) {
+		System.out.println("Checking for presence of directory: " + extractedDir);
+
+		File uzrelease = new File(extractedDir);
+		if (!uzrelease.exists()) {
+			Util.extract(zipFile, extractedDir);
+			for (File file: new File(extractedDir + "/solr-"+baseVersion).listFiles()) {
 				String src = file.getAbsolutePath();
-				String dest = SolrRollingUpgradeTests.TEMP_DIR + "solr-"+version;
+				String dest = extractedDir;
 				System.out.println("Moving "+src+ " to "+dest);
-				//Files.move(Paths.get(src), Paths.get(dest), StandardCopyOption.REPLACE_EXISTING);
 				if (file.isDirectory()) {
 					FileUtils.moveDirectoryToDirectory(file, new File(dest), true);
 				} else {
@@ -113,7 +118,7 @@ public class SolrNode {
 
 		File node = new File(nodeDirectory + "solr-" + version);
 		node.mkdir();
-		FileUtils.copyDirectory(new File(SolrRollingUpgradeTests.TEMP_DIR + "solr-" + version), node);
+		FileUtils.copyDirectory(new File(extractedDir), node);
 	}
 
 	String getBaseVersion(String versionFile) throws FileNotFoundException, IOException {
@@ -164,6 +169,8 @@ public class SolrNode {
 
 		if (gitDirectory.exists()) {
 			repository = Git.open(gitDirectory);
+			
+			repository.stashCreate().call(); // drop all local changes
 
 			repository.checkout()
 			.setName(commit)
@@ -179,9 +186,17 @@ public class SolrNode {
 			.call();
 		}
 
+		if (patchUrl != null) {
+			InputStream in = new URL(patchUrl).openStream();
+			String patch = IOUtils.toString(in, StandardCharsets.UTF_8);
+			ApplyResult apply = repository.apply().setPatch(new ByteArrayInputStream(patch.getBytes(StandardCharsets.UTF_8))).call();
+			System.out.println("Patch applied? " + apply);
+		}
+
 		String baseVersion = getBaseVersion(gitDirectoryPath + "/lucene/version.properties");
 		String packageFilename = gitDirectoryPath + "/solr/package/solr-"+baseVersion+".zip";
-		String tarballLocation = SolrRollingUpgradeTests.TEMP_DIR+"solr-"+commit+".zip";
+		String tarballLocation = (patchUrl == null)? SolrRollingUpgradeTests.TEMP_DIR+"solr-"+commit+".zip":
+			SolrRollingUpgradeTests.TEMP_DIR + "solr-" + commit + "-" + Util.md5(patchUrl) + ".zip";
 
 		if (new File(tarballLocation).exists() == false) {
 			Util.postMessage("** There were new changes, need to rebuild ...", MessageType.ACTION, true);

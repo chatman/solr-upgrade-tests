@@ -86,7 +86,9 @@ public class SimpleBenchmarks {
 			Boolean.parseBoolean(argM.get("-onlyRegularUpdates")): false;
 			
 		String benchmarkType = argM.containsKey("-benchmarkType")? argM.get("-benchmarkType"): "inplace";
-		
+
+		String patchUrl = argM.get("-patchUrl");
+
 		Zookeeper zookeeper = new Zookeeper();
 		SolrClient client = new SolrClient(1000, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort(),
 				numDocs, iterations, updates, queueSize, thread, onlyRegularUpdates);
@@ -96,7 +98,7 @@ public class SimpleBenchmarks {
 
 		SolrNode node;
 		for (int i = 1; i <= nodesCount ; i++) {
-			node = new SolrNode(versionOne, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort());
+			node = new SolrNode(versionOne, patchUrl, zookeeper.getZookeeperIp(), zookeeper.getZookeeperPort());
 			node.start();
 			Thread.sleep(1000);
 			nodes.add(node);

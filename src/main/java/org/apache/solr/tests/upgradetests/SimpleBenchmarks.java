@@ -77,10 +77,10 @@ public class SimpleBenchmarks {
 		int nodesCount = Integer.parseInt(numNodes);
 
 		int numDocs = Integer.parseInt(argM.get("-numDocs"));
-		int iterations = Integer.parseInt(argM.get("-iterations"));
-		int updates = Integer.parseInt(argM.get("-updates"));
-		int queueSize = Integer.parseInt(argM.get("-queueSize"));
-		int thread = Integer.parseInt(argM.get("-threads"));
+		int iterations = argM.containsKey("-iterations")? Integer.parseInt(argM.get("-iterations")): 10;
+		int updates = argM.containsKey("-updates")? Integer.parseInt(argM.get("-updates")): 20000;
+		int queueSize = argM.containsKey("-queueSize")? Integer.parseInt(argM.get("-queueSize")): 5000;
+		int thread = argM.containsKey("-threads")? Integer.parseInt(argM.get("-threads")): 2;
 
 		boolean onlyRegularUpdates = argM.containsKey("-onlyRegularUpdates")? 
 			Boolean.parseBoolean(argM.get("-onlyRegularUpdates")): false;

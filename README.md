@@ -1,3 +1,5 @@
+Note: Forked from https://github.com/viveknarang/solr-upgrade-tests
+
 # Solr Upgrade Tests
 Introduction
 ------------

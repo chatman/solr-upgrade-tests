@@ -20,3 +20,5 @@ General querying benchmark (prefix queries):
 --------------------------
 java -cp target/org.apache.solr.tests.upgradetests-0.0.1-SNAPSHOT-jar-with-dependencies.jar:. org.apache.solr.tests.upgradetests.SimpleBenchmarks -v 72f75b2503fa0aa4f0aff76d439874feb923bb0e -Nodes 1 -Shards 1 -Replicas 1 -numDocs 10000 -threads 4 -benchmarkType generalQuerying
 
+Note:
+Project originally forked from https://github.com/viveknarang/solr-upgrade-tests
